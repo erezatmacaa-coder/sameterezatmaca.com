@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Samet Erez Atmaca</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Inter', -apple-system, sans-serif;
+      background: #0a0a0a;
+      color: #f0f0f0;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+    a { color: inherit; text-decoration: none; }
+    img { max-width: 100%; display: block; }
+    .container { max-width: 900px; margin: 0 auto; padding: 0 24px; }
+
+    nav {
+      position: fixed; top: 0; left: 0; right: 0;
+      background: rgba(10,10,10,0.85); backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+      z-index: 100;
+    }
+    nav .container {
+      display: flex; align-items: center; justify-content: space-between;
+      height: 56px;
+    }
+    .logo { font-weight: 800; font-size: 20px; letter-spacing: -0.5px; }
+    .logo span { color: #00d4ff; }
+    .nav-links { display: flex; gap: 28px; list-style: none; }
+    .nav-links a { font-size: 14px; font-weight: 500; color: #888; transition: color 0.2s; }
+    .nav-links a:hover { color: #fff; }
+
+    section { padding: 120px 0 80px; }
+    .hero { padding: 160px 0 100px; text-align: center; }
+    .hero h1 { font-size: clamp(40px, 8vw, 72px); font-weight: 800; letter-spacing: -2px; line-height: 1.1; }
+    .hero h1 span { background: linear-gradient(135deg, #00d4ff, #7b2ff7); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+    .hero p { margin-top: 20px; font-size: 18px; color: #888; max-width: 560px; margin-inline: auto; }
+    .hero-badge {
+      display: inline-block; padding: 6px 16px; border-radius: 100px;
+      background: rgba(0,212,255,0.1); border: 1px solid rgba(0,212,255,0.2);
+      font-size: 13px; font-weight: 500; color: #00d4ff; margin-bottom: 24px;
+    }
+    .hero-actions { margin-top: 40px; display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+    .btn {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 12px 28px; border-radius: 8px; font-size: 15px; font-weight: 600;
+      transition: all 0.2s; border: none; cursor: pointer;
+    }
+    .btn-primary { background: #00d4ff; color: #0a0a0a; }
+    .btn-primary:hover { background: #33ddff; transform: translateY(-1px); }
+    .btn-outline { background: transparent; color: #f0f0f0; border: 1px solid rgba(255,255,255,0.15); }
+    .btn-outline:hover { border-color: rgba(255,255,255,0.3); }
+
+    .section-label {
+      font-size: 13px; font-weight: 600; color: #00d4ff; text-transform: uppercase;
+      letter-spacing: 2px; margin-bottom: 8px;
+    }
+    .section-title { font-size: 32px; font-weight: 700; letter-spacing: -0.5px; }
+    .section-desc { color: #888; margin-top: 12px; font-size: 16px; max-width: 500px; }
+
+    .about-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 60px; margin-top: 48px; align-items: center; }
+    @media (max-width: 700px) { .about-grid { grid-template-columns: 1fr; gap: 32px; } }
+    .about-text p { color: #999; margin-top: 16px; font-size: 15px; }
+    .about-text p:first-of-type { margin-top: 0; }
+    .about-image { background: #111; border-radius: 12px; aspect-ratio: 1; overflow: hidden; }
+    .about-image img { width: 100%; height: 100%; object-fit: cover; }
+
+    .skills-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 16px; margin-top: 40px; }
+    .skill-card {
+      background: #111; border: 1px solid rgba(255,255,255,0.06); border-radius: 10px;
+      padding: 20px; transition: all 0.2s;
+    }
+    .skill-card:hover { border-color: rgba(0,212,255,0.2); transform: translateY(-2px); }
+    .skill-card i { font-size: 22px; color: #00d4ff; }
+    .skill-card h4 { margin-top: 12px; font-size: 15px; font-weight: 600; }
+    .skill-card p { margin-top: 4px; font-size: 13px; color: #666; }
+
+    .projects-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 20px; margin-top: 40px; }
+    .project-card {
+      background: #111; border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 10px; padding: 24px; transition: all 0.2s;
+    }
+    .project-card:hover { border-color: rgba(0,212,255,0.2); transform: translateY(-2px); }
+    .project-card .tag {
+      display: inline-block; padding: 3px 10px; border-radius: 6px;
+      font-size: 12px; font-weight: 500; background: rgba(0,212,255,0.1); color: #00d4ff;
+    }
+    .project-card h3 { margin-top: 16px; font-size: 18px; font-weight: 600; }
+    .project-card p { margin-top: 8px; font-size: 14px; color: #888; line-height: 1.5; }
+    .project-card .tech { margin-top: 16px; display: flex; gap: 8px; flex-wrap: wrap; }
+    .project-card .tech span { font-size: 12px; padding: 3px 10px; border-radius: 6px; background: rgba(255,255,255,0.05); color: #999; }
+
+    .contact-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 16px; margin-top: 40px; }
+    .contact-card {
+      background: #111; border: 1px solid rgba(255,255,255,0.06); border-radius: 10px;
+      padding: 24px; text-align: center; transition: all 0.2s;
+    }
+    .contact-card:hover { border-color: rgba(0,212,255,0.2); transform: translateY(-2px); }
+    .contact-card i { font-size: 28px; color: #00d4ff; }
+    .contact-card h4 { margin-top: 12px; font-size: 15px; font-weight: 600; }
+    .contact-card span { display: block; margin-top: 4px; font-size: 13px; color: #666; word-break: break-all; }
+
+    footer { padding: 40px 0; text-align: center; border-top: 1px solid rgba(255,255,255,0.06); }
+    footer p { font-size: 13px; color: #444; }
+
+    @media (max-width: 500px) {
+      .nav-links { gap: 16px; }
+      .nav-links a { font-size: 13px; }
+      section { padding: 80px 0 48px; }
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <div class="container">
+    <a href="#" class="logo">SE<span>.</span></a>
+    <ul class="nav-links">
+      <li><a href="#about">Hakkımda</a></li>
+      <li><a href="#skills">Yetenekler</a></li>
+      <li><a href="#projects">Projeler</a></li>
+      <li><a href="#contact">İletişim</a></li>
+    </ul>
+  </div>
+</nav>
+
+<section class="hero">
+  <div class="container">
+    <div class="hero-badge">AI Kaşifi · Lise Öğrencisi</div>
+    <h1>Samet Erez<br/><span>Atmaca</span></h1>
+    <p>Yapay zekayı keşfediyor, öğrendiklerimle projeler geliştiriyorum. Henüz yolun başındayım ama merakım beni ileri taşıyor.</p>
+    <div class="hero-actions">
+      <a href="#projects" class="btn btn-primary">Projelerimi Gör</a>
+      <a href="#contact" class="btn btn-outline">İletişime Geç</a>
+    </div>
+  </div>
+</section>
+
+<section id="about">
+  <div class="container">
+    <div class="section-label">Hakkımda</div>
+    <h2 class="section-title">Merhaba! Ben Samet</h2>
+    <div class="about-grid">
+      <div class="about-text">
+        <p>Lise öğrencisiyim ve yapay zekaya büyük bir ilgi duyuyorum. AI araçlarını kullanarak projeler geliştiriyor, her gün yeni şeyler öğreniyorum.</p>
+        <p>Yazılım konusunda henüz çok yeniyim — temel düzeyde bilgim var. Ama AI sayesinde hayal ettiğim fikirleri gerçeğe dönüştürebiliyorum. Öğrenmeyi ve keşfetmeyi seviyorum.</p>
+      </div>
+      <div class="about-image">
+        <img src="https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=400&h=400&fit=crop" alt="Samet Erez Atmaca" />
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="skills" style="background:#0d0d0d;">
+  <div class="container">
+    <div class="section-label">Yetenekler</div>
+    <h2 class="section-title">Kullandığım Teknolojiler</h2>
+    <p class="section-desc">AI destekli öğrenme ile geliştirdiğim beceriler</p>
+    <div class="skills-grid">
+      <div class="skill-card"><h4>Python</h4><p>Temel düzey, AI ile kodlama</p></div>
+      <div class="skill-card"><h4>HTML & CSS</h4><p>Web arayüzleri</p></div>
+      <div class="skill-card"><h4>JavaScript</h4><p>Başlangıç seviyesi</p></div>
+      <div class="skill-card"><h4>Prompt Engineering</h4><p>AI araçlarıyla üretim</p></div>
+      <div class="skill-card"><h4>Git & GitHub</h4><p>Versiyon kontrolü</p></div>
+      <div class="skill-card"><h4>Öğrenme & Merak</h4><p>En güçlü yeteneğim</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="projects">
+  <div class="container">
+    <div class="section-label">Projeler</div>
+    <h2 class="section-title">Yaptığım Çalışmalar</h2>
+    <p class="section-desc">GitHub üzerinde yayınladığım projeler</p>
+    <div class="projects-grid">
+      <div class="project-card">
+        <span class="tag">Tamamlandı</span>
+        <h3>Hardware-Monitor</h3>
+        <p>Anlık CPU ve RAM kullanımını terminal üzerinden takip eden sistem aracı. Python ile geliştirildi.</p>
+        <div class="tech"><span>Python</span><span>psutil</span></div>
+      </div>
+      <div class="project-card">
+        <span class="tag">Geliştiriliyor</span>
+        <h3>CodeCrew</h3>
+        <p>8 yapay zeka ajanının bir ofiste birlikte çalışarak kod geliştirdiği multi-agent sistem.</p>
+        <div class="tech"><span>Python</span><span>FastAPI</span></div>
+      </div>
+      <div class="project-card">
+        <span class="tag">Geliştiriliyor</span>
+        <h3>studymate-ai</h3>
+        <p>AI destekli çalışma asistanı. PDF yükle, AI ile özet, flash card ve quiz oluştur.</p>
+        <div class="tech"><span>FastAPI</span><span>React</span></div>
+      </div>
+      <div class="project-card">
+        <span class="tag">Geliştiriliyor</span>
+        <h3>codeForge</h3>
+        <p>Terminal üzerinde çalışan AI destekli kod asistanı. Dosya okuma/yazma ve otomatik test.</p>
+        <div class="tech"><span>Python</span><span>Gemini API</span></div>
+      </div>
+      <div class="project-card">
+        <span class="tag">Plan Aşaması</span>
+        <h3>Prompt Kütüphanesi</h3>
+        <p>1000+ hazır AI promptu — kaydet, kategorize et, kopyala.</p>
+        <div class="tech"><span>HTML/CSS/JS</span></div>
+      </div>
+      <div class="project-card">
+        <span class="tag">Plan Aşaması</span>
+        <h3>locamo</h3>
+        <p>Plan aşamasında olan yeni proje. Detaylar yakında.</p>
+        <div class="tech"><span>?</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="contact" style="background:#0d0d0d;">
+  <div class="container">
+    <div class="section-label">İletişim</div>
+    <h2 class="section-title">Bana Ulaşın</h2>
+    <p class="section-desc">Aşağıdaki kanallardan benimle iletişime geçebilirsiniz.</p>
+    <div class="contact-grid">
+      <a href="mailto:info@sameterezatmaca.com" class="contact-card">
+        <h4>E-posta</h4>
+        <span>info@sameterezatmaca.com</span>
+      </a>
+      <a href="https://github.com/erezatmacaa-coder" target="_blank" class="contact-card">
+        <h4>GitHub</h4>
+        <span>@erezatmacaa-coder</span>
+      </a>
+      <a href="mailto:erez.atmaca@hotmail.com" class="contact-card">
+        <h4>E-posta Yedek</h4>
+        <span>erez.atmaca@hotmail.com</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="container">
+    <p>&copy; 2026 Samet Erez Atmaca. Tüm hakları saklıdır.</p>
+  </div>
+</footer>
+
+</body>
+</html>
