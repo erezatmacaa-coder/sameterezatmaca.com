@@ -91,6 +91,15 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:2rem 4rem;display:fl
 .abt-body{font-size:1rem;line-height:2;color:rgba(245,245,240,.5);font-weight:300;max-width:420px;position:relative;z-index:1;}
 .abt-body strong{color:var(--w);font-weight:400;}
 .abt-r{padding:8rem 4rem;display:flex;flex-direction:column;justify-content:center;gap:4rem;}
+.photo-frame{position:relative;width:100%;max-width:320px;clip-path:polygon(16px 0,100% 0,100% calc(100% - 16px),calc(100% - 16px) 100%,0 100%,0 16px);overflow:hidden;margin-bottom:1rem;}
+.photo-frame::before{content:'';position:absolute;inset:0;z-index:2;border:1px solid rgba(255,61,0,.3);clip-path:polygon(16px 0,100% 0,100% calc(100% - 16px),calc(100% - 16px) 100%,0 100%,0 16px);pointer-events:none;}
+.photo-frame::after{content:'';position:absolute;inset:0;z-index:3;background:linear-gradient(135deg,transparent 30%,rgba(255,61,0,.15));pointer-events:none;transition:opacity .4s;}
+.photo-frame:hover::after{opacity:0;}
+.photo-frame img{width:100%;height:auto;display:block;transition:transform .5s;filter:grayscale(.3) contrast(1.05);}
+.photo-frame:hover img{transform:scale(1.04);}
+.photo-frame .glitch-line{position:absolute;top:40%;left:0;right:0;height:2px;background:var(--acc);z-index:4;opacity:0;transition:opacity .3s;pointer-events:none;mix-blend-mode:difference;}
+.photo-frame:hover .glitch-line{opacity:.6;animation:glitchLine .3s infinite;}
+@keyframes glitchLine{0%{transform:translateX(-10px)}50%{transform:translateX(10px)}100%{transform:translateX(-5px)}}
 .stat{border-bottom:1px solid rgba(255,255,255,.06);padding-bottom:3rem;}
 .stat:last-child{border-bottom:none;}
 .snum{font-family:var(--f1);font-size:clamp(4rem,8vw,7rem);letter-spacing:-.03em;color:var(--acc);display:flex;align-items:baseline;gap:.2em;}
@@ -245,17 +254,17 @@ footer p{font-family:var(--f3);font-size:.6rem;color:var(--dim);letter-spacing:.
     <p class="abt-body">Lise öğrencisiyim ve <strong>yapay zekaya</strong> büyük bir ilgi duyuyorum. AI araçlarını kullanarak projeler geliştiriyor, her gün yeni şeyler öğreniyorum.<br><br>Yazılım konusunda henüz çok yeniyim ama <strong>merakım beni ileri taşıyor.</strong></p>
   </div>
   <div class="abt-r">
-    <div class="stat sr d1">
+    <div class="photo-frame sr d1">
+      <div class="glitch-line"></div>
+      <img src="photo.jpg" alt="Samet Erez Atmaca" />
+    </div>
+    <div class="stat sr d2">
       <div class="snum">5<sub>+ proje</sub></div>
       <div class="slbl">GitHub'da aktif çalışma</div>
     </div>
-    <div class="stat sr d2">
+    <div class="stat sr d3">
       <div class="snum">∞</div>
       <div class="slbl">Merak ve öğrenme isteği</div>
-    </div>
-    <div class="stat sr d3">
-      <div class="snum">2026</div>
-      <div class="slbl">Aktif yıl</div>
     </div>
   </div>
 </section>
