@@ -348,7 +348,7 @@ document.getElementById('contactForm').addEventListener('submit', async function
   btn.disabled = true;
   btn.textContent = '...';
   try {
-    const r = await fetch('https://formsubmit.co/ajax/erez.atmaca@hotmail.com', {
+    const r = await fetch('https://formsubmit.co/ajax/info@sameterezatmaca.com', {
       method: 'POST', headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
       body: JSON.stringify({ isim: this.isim.value, email: this.email.value, mesaj: this.mesaj.value, _subject: 'sameterezatmaca.com mesaj', _captcha: 'false' })
     });
