@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="tr">
 <head>
 <meta charset="UTF-8">
@@ -38,7 +38,13 @@ body{font-family:'Inter',sans-serif;background:#070709;color:#e8e6e3;overflow-x:
 #noise{position:fixed;top:0;left:0;width:100%;height:100%;z-index:1;pointer-events:none;opacity:.2;mix-blend-mode:overlay;}
 #noise svg{width:100%;height:100%;}
 
+/* MOUSE GLOW */
+#glow{position:fixed;width:500px;height:500px;border-radius:50%;background:radial-gradient(circle,rgba(201,168,76,.03) 0%,transparent 60%);pointer-events:none;z-index:2;transform:translate(-50%,-50%);will-change:transform;}
 
+/* CURSOR */
+#cursor{position:fixed;width:8px;height:8px;border-radius:50%;background:#c9a84c;pointer-events:none;z-index:9998;transform:translate(-50%,-50%);will-change:transform;mix-blend-mode:difference;}
+#cursor-ring{position:fixed;width:32px;height:32px;border-radius:50%;border:1px solid rgba(201,168,76,.15);pointer-events:none;z-index:9997;transform:translate(-50%,-50%);will-change:transform;transition:width .3s,height .3s,border-color .3s;}
+a:hover~#cursor-ring,button:hover~#cursor-ring{width:44px;height:44px;border-color:rgba(201,168,76,.3);}
 
 /* PROGRESS */
 #progress{position:fixed;top:0;left:0;height:2px;z-index:999;width:0%;}
@@ -66,7 +72,7 @@ nav.scrolled{background:rgba(7,7,9,.85);border-bottom-color:rgba(201,168,76,.04)
 .hero-left{position:relative;}
 .hero-title{font-size:clamp(2.8rem,7vw,6rem);font-weight:800;letter-spacing:-.04em;line-height:1.02;}
 .hero-title .line{display:block;overflow:hidden;}
-.hero-title .line span{display:block;}
+.hero-title .line span{display:block;transform:translateY(100%);}
 .hero-title .gold{background:linear-gradient(135deg,#c9a84c 0%,#e8d5a3 40%,#c9a84c 70%,#b8943a 100%);background-size:200% auto;-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;animation:gf 8s ease infinite;}
 @keyframes gf{0%{background-position:0 50%}50%{background-position:100% 50%}100%{background-position:0 50%}}
 .hero-desc{font-size:1rem;color:rgba(232,230,227,.25);line-height:1.8;max-width:420px;margin-top:1.8rem;font-weight:300;}
@@ -194,6 +200,9 @@ footer p{font-size:.55rem;color:rgba(232,230,227,.08);font-weight:400;letter-spa
   </svg>
 </div>
 
+<div id="glow"></div>
+<div id="cursor"></div>
+<div id="cursor-ring"></div>
 <div id="progress"><div></div></div>
 
 <nav>
@@ -311,24 +320,37 @@ footer p{font-size:.55rem;color:rgba(232,230,227,.08);font-weight:400;letter-spa
 </footer>
 
 <script>
-// !!! LOADER FALLBACK - BEFORE GSAP !!!
-setTimeout(() => { const l = document.getElementById('loader'); if (l) l.style.display = 'none'; }, 2000);
+gsap.registerPlugin(ScrollTrigger);
 
-try { gsap.registerPlugin(ScrollTrigger); } catch(e) {}
-
-const tl = gsap && gsap.timeline ? gsap.timeline({ defaults: { ease: 'power4.out' } }) : null;
-if (tl) {
+// === LOADER ===
+setTimeout(() => { const l = document.getElementById('loader'); if (l) l.style.display = 'none'; }, 3000);
+const tl = gsap.timeline({ defaults: { ease: 'power4.out' } });
 tl.to('#loader .ring', { opacity: 0, duration: 0.4, delay: 0.6 })
   .to('#loader p', { opacity: 0, duration: 0.3 }, '-=0.2')
   .to('#loader', { opacity: 0, duration: 0.5, display: 'none' })
   .from('nav', { y: -30, opacity: 0, duration: 0.6 }, '-=0.15');
+
+// === HERO ENTRANCE ===
 tl.to('.hero-title .line:nth-child(1) span', { y: 0, duration: 1.2, ease: 'power4.out' })
   .to('.hero-title .line:nth-child(2) span', { y: 0, duration: 1.2, ease: 'power4.out' }, '-=0.9')
   .to('.hero-tag span span', { y: 0, duration: 0.6, ease: 'power4.out' }, '-=0.8')
   .from('.hero-desc', { y: 20, opacity: 0, duration: 0.8, ease: 'power4.out' }, '-=0.6')
   .from('.hero-actions', { y: 20, opacity: 0, duration: 0.8, ease: 'power4.out' }, '-=0.5')
   .from('.hero-visual', { scale: 0.7, opacity: 0, duration: 1.2, ease: 'back.out(1.7)' }, '-=0.7');
-}
+
+// === MOUSE GLOW ===
+const glow = document.getElementById('glow');
+let gx = window.innerWidth / 2, gy = window.innerHeight / 2;
+document.addEventListener('mousemove', (e) => { gx = e.clientX; gy = e.clientY; });
+gsap.ticker.add(() => { gsap.set(glow, { x: gx, y: gy }); });
+
+// === CUSTOM CURSOR ===
+const cursor = document.getElementById('cursor');
+const cursorRing = document.getElementById('cursor-ring');
+document.addEventListener('mousemove', (e) => {
+  gsap.to(cursor, { x: e.clientX, y: e.clientY, duration: 0.05 });
+  gsap.to(cursorRing, { x: e.clientX, y: e.clientY, duration: 0.15 });
+});
 
 // === SCROLL PROGRESS ===
 window.addEventListener('scroll', () => {
@@ -363,10 +385,12 @@ document.getElementById('menuToggle').addEventListener('click', () => {
   btn.classList.toggle('open');
 });
 
-// GSAFE: wrap all GSAP-dependent animations
-if (typeof gsap !== 'undefined' && typeof ScrollTrigger !== 'undefined') {
+// === SCROLL REVEALS ===
+// About
 gsap.from('#about .about-row > *', { scrollTrigger: { trigger: '#about', start: 'top 80%' }, duration: 1, x: -40, opacity: 0, stagger: 0.15, ease: 'power4.out' });
 gsap.to('#about .about-title .w span', { scrollTrigger: { trigger: '#about', start: 'top 75%' }, y: 0, duration: 0.7, stagger: 0.1, ease: 'power4.out' });
+
+// Skills
 gsap.from('.sk-item', { scrollTrigger: { trigger: '#skills', start: 'top 75%' }, duration: 0.6, y: 12, opacity: 0, stagger: 0.04, ease: 'power4.out' });
 document.querySelectorAll('.sk-item').forEach(row => {
   ScrollTrigger.create({
@@ -375,14 +399,19 @@ document.querySelectorAll('.sk-item').forEach(row => {
     once: true
   });
 });
+
+// Projects
 gsap.to('#projects .proj-title .w span', { scrollTrigger: { trigger: '#projects', start: 'top 80%' }, y: 0, duration: 0.7, stagger: 0.1, ease: 'power4.out' });
 gsap.from('.proj', { scrollTrigger: { trigger: '#projects', start: 'top 70%' }, duration: 0.6, y: 15, opacity: 0, stagger: 0.04, ease: 'power4.out' });
+
+// Contact
 gsap.to('#contact .contact-title .w span', { scrollTrigger: { trigger: '#contact', start: 'top 80%' }, y: 0, duration: 0.7, stagger: 0.1, ease: 'power4.out' });
 gsap.from('.contact-links a', { scrollTrigger: { trigger: '#contact', start: 'top 75%' }, duration: 0.6, y: 12, opacity: 0, stagger: 0.05, ease: 'power4.out' });
+
+// Section labels reveal
 gsap.utils.toArray('.section-label').forEach(label => {
   gsap.from(label, { scrollTrigger: { trigger: label, start: 'top 85%' }, duration: 0.6, y: 15, opacity: 0, ease: 'power4.out' });
 });
-}
 
 // === 3D TILT ON PROJ CARDS ===
 document.querySelectorAll('.proj').forEach(c => {
