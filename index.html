@@ -30,11 +30,12 @@ body{font-family:'Inter',sans-serif;background:#08080b;color:#e8e6e3;overflow-x:
 #progress{position:fixed;top:0;left:0;height:2px;z-index:999;width:0%;background:linear-gradient(90deg,transparent,#c9a84c,transparent)}
 nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:1.8rem 3rem;display:flex;justify-content:space-between;align-items:center;background:rgba(8,8,11,.3);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-bottom:1px solid rgba(255,255,255,.02);transition:background .5s}
 nav.scrolled{background:rgba(8,8,11,.8);border-bottom-color:rgba(201,168,76,.04)}
-.nlogo{font-weight:800;font-size:1.2rem;letter-spacing:-.5px;color:#e8e6e3;text-decoration:none}
+.nlogo{font-weight:800;font-size:1.1rem;letter-spacing:2px;color:#e8e6e3;text-decoration:none;border:1px solid rgba(201,168,76,.15);padding:.3rem .7rem;border-radius:4px;transition:border-color .3s}
+.nlogo:hover{border-color:rgba(201,168,76,.4)}
 .nlogo span{color:#c9a84c}
 .nlinks{display:flex;gap:2.8rem;list-style:none}
-.nlinks a{font-size:.7rem;color:rgba(232,230,227,.25);text-decoration:none;letter-spacing:.12em;text-transform:uppercase;transition:color .4s;font-weight:500;position:relative}
-.nlinks a::after{content:'';position:absolute;bottom:-4px;left:0;width:0;height:1px;background:#c9a84c;transition:width .4s;border-radius:2px}
+.nlinks a{font-size:.65rem;color:rgba(232,230,227,.2);text-decoration:none;letter-spacing:.15em;text-transform:uppercase;transition:color .4s;font-weight:500;position:relative}
+.nlinks a::after{content:'';position:absolute;bottom:-4px;left:0;width:0;height:1px;background:#c9a84c;transition:width .5s cubic-bezier(.16,1,.3,1);border-radius:2px}
 .nlinks a:hover::after{width:100%}
 .nlinks a:hover{color:#e8e6e3}
 .lang-select{margin-left:2rem}
@@ -42,14 +43,14 @@ nav.scrolled{background:rgba(8,8,11,.8);border-bottom-color:rgba(201,168,76,.04)
 .lang-btn:hover{background:rgba(201,168,76,.06);border-color:rgba(201,168,76,.15);color:#c9a84c}
 section{position:relative;z-index:2;padding:0 3rem}
 .section-inner{max-width:1100px;width:100%;margin:0 auto;padding:8rem 0}
-.section-tag{font-size:.6rem;text-transform:uppercase;letter-spacing:.25em;color:rgba(201,168,76,.5);font-weight:400;margin-bottom:1.5rem;display:flex;align-items:center;gap:.8rem}
-.section-tag::before{content:'';width:20px;height:1px;background:rgba(201,168,76,.2)}
+.section-tag{font-size:.55rem;text-transform:uppercase;letter-spacing:.3em;color:rgba(201,168,76,.4);font-weight:500;margin-bottom:1.2rem;display:flex;align-items:center;gap:.8rem}
+.section-tag::before{content:'';width:24px;height:1px;background:rgba(201,168,76,.15)}
 #hero{min-height:100vh;display:flex;align-items:center;padding:0 3rem}
 .hero-inner{max-width:1100px;width:100%;margin:0 auto;padding:8rem 0}
-.hero-tag{font-size:.65rem;text-transform:uppercase;letter-spacing:.2em;color:rgba(201,168,76,.6);font-weight:400;margin-bottom:2rem}
+.hero-tag{font-size:.6rem;text-transform:uppercase;letter-spacing:.3em;color:rgba(201,168,76,.5);font-weight:500;margin-bottom:2rem}
 .hero-row{display:grid;grid-template-columns:1fr 300px;gap:5rem;align-items:center}
 @media(max-width:860px){.hero-row{grid-template-columns:1fr;gap:2.5rem}.hero-visual{order:-1}}
-.hero-title{font-size:clamp(2.8rem,7vw,6rem);font-weight:800;letter-spacing:-.04em;line-height:1.02}
+.hero-title{font-size:clamp(2.8rem,7vw,6rem);font-weight:800;letter-spacing:-.04em;line-height:1;margin-bottom:.5rem}
 .hero-title .line{display:block;overflow:hidden}
 .hero-title .line span{display:block}
 .hero-title .gold{background:linear-gradient(135deg,#c9a84c 0%,#e8d5a3 40%,#c9a84c 70%,#b8943a 100%);background-size:200% auto;-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;animation:goldFlow 8s ease infinite}
@@ -63,10 +64,12 @@ section{position:relative;z-index:2;padding:0 3rem}
 .btn-outline:hover{color:#e8e6e3;border-color:rgba(201,168,76,.2);transform:translateY(-2px);background:rgba(201,168,76,.03)}
 .hero-visual{position:relative;width:280px;height:280px;justify-self:center}
 @media(max-width:860px){.hero-visual{width:200px;height:200px}}
-.hero-visual .photo{width:100%;height:100%;border-radius:50%;overflow:hidden;position:relative}
+.hero-visual::before{content:'';position:absolute;inset:-6px;border-radius:50%;background:linear-gradient(135deg,#c9a84c,rgba(201,168,76,.2),#c9a84c);z-index:-1;opacity:.6;animation:ringPulse 3s ease-in-out infinite}
+@keyframes ringPulse{0%,100%{opacity:.4;transform:scale(1)}50%{opacity:.8;transform:scale(1.02)}}
+.hero-visual .photo{width:100%;height:100%;border-radius:50%;overflow:hidden;position:relative;border:2px solid rgba(201,168,76,.08)}
 .hero-visual .photo img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .8s}
 .hero-visual:hover .photo img{transform:scale(1.06)}
-.hero-visual .photo::after{content:'';position:absolute;inset:0;border-radius:50%;background:linear-gradient(135deg,rgba(201,168,76,.08),transparent 50%);pointer-events:none}
+.hero-visual .photo::after{content:'';position:absolute;inset:0;border-radius:50%;background:linear-gradient(135deg,rgba(201,168,76,.1),transparent 50%);pointer-events:none}
 .about-text{max-width:700px}
 .about-title{font-size:clamp(1.6rem,4vw,2.8rem);font-weight:700;letter-spacing:-.03em;line-height:1.15;margin-bottom:1.5rem}
 .about-title span{color:rgba(232,230,227,.08);font-weight:300}
@@ -345,9 +348,9 @@ document.getElementById('contactForm').addEventListener('submit', async function
   btn.disabled = true;
   btn.textContent = '...';
   try {
-    const r = await fetch('https://formsubmit.co/ajax/info@sameterezatmaca.com', {
+    const r = await fetch('https://formsubmit.co/ajax/erez.atmaca@hotmail.com', {
       method: 'POST', headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-      body: JSON.stringify({ isim: this.isim.value, email: this.email.value, mesaj: this.mesaj.value, _subject: 'sameterezatmaca.com mesaj' })
+      body: JSON.stringify({ isim: this.isim.value, email: this.email.value, mesaj: this.mesaj.value, _subject: 'sameterezatmaca.com mesaj', _captcha: 'false' })
     });
     if (r.ok) { fb.textContent = btn.dataset.i18n ? t[document.documentElement.getAttribute('data-lang')].form_ok : 'Mesaj gonderildi ✓'; fb.className = 'form-feedback show success'; this.reset(); }
     else { fb.textContent = btn.dataset.i18n ? t[document.documentElement.getAttribute('data-lang')].form_err : 'Hata olustu, tekrar dene'; fb.className = 'form-feedback show error'; }
