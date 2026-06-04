@@ -19,6 +19,10 @@ body{font-family:'Inter',sans-serif;background:#0a0a0f;color:#f0f0f0;overflow-x:
 /* SCROLL PROGRESS */
 #scroll-bar{position:fixed;top:0;left:0;height:2px;background:linear-gradient(90deg,#6c5ce7,#a29bfe,#6c5ce7);background-size:200% 100%;animation:barShine 3s linear infinite;z-index:999;width:0%;transition:width .05s;}
 @keyframes barShine{0%{background-position:0 0}100%{background-position:200% 0}}
+#init-loader{position:fixed;inset:0;z-index:9999;background:#0a0a0f;display:flex;align-items:center;justify-content:center;transition:opacity .6s,visibility .6s;}
+#init-loader.hide{opacity:0;visibility:hidden;}
+#init-loader .spinner{width:24px;height:24px;border:2px solid rgba(255,255,255,.06);border-top-color:#6c5ce7;border-radius:50%;animation:spin .8s linear infinite;}
+@keyframes spin{to{transform:rotate(360deg)}}
 
 /* NAV */
 nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:2rem 3rem;display:flex;justify-content:space-between;align-items:center;background:rgba(10,10,15,.3);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-bottom:1px solid rgba(255,255,255,.04);transition:background .4s,box-shadow .4s;}
@@ -117,6 +121,7 @@ footer p{font-size:.65rem;color:rgba(255,255,255,.15);font-weight:400;}
 </head>
 <body>
 
+<div id="init-loader"><div class="spinner"></div></div>
 <div id="three-bg"></div>
 <div id="scroll-bar"></div>
 
@@ -367,6 +372,9 @@ animate();
 
 // === GSAP ENTRANCE ANIMATIONS ===
 gsap.registerPlugin(ScrollTrigger);
+
+// INIT LOADER
+setTimeout(() => document.getElementById('init-loader').classList.add('hide'), 400);
 
 gsap.from('.hero-label', { duration: 0.8, y: 30, opacity: 0, ease: 'power4.out', delay: 0.3 });
 gsap.from('.hero-title .grad', { duration: 0.8, y: 40, opacity: 0, ease: 'power4.out', delay: 0.5 });
