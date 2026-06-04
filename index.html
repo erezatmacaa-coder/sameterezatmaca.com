@@ -118,10 +118,7 @@ section{position:relative;z-index:2;padding:0 3rem}
 .cf-input::placeholder{color:rgba(232,230,227,.2)}
 textarea.cf-input{resize:vertical;min-height:100px}
 .contact-form .btn-primary{padding:.8rem 2rem;align-self:flex-start}
-.form-feedback{font-size:.7rem;opacity:0;transition:opacity .4s;padding:.4rem 0}
-.form-feedback.show{opacity:1}
-.form-feedback.success{color:#c9a84c}
-.form-feedback.error{color:#e74c3c}
+
 footer{border-top:1px solid rgba(255,255,255,.02);padding:2rem 3rem;display:flex;justify-content:space-between;align-items:center;position:relative;z-index:2}
 footer p{font-size:.6rem;color:rgba(232,230,227,.1);font-weight:400}
 @media(max-width:700px){
@@ -296,12 +293,13 @@ footer{padding:1.5rem}
         <a href="https://github.com/erezatmacaa-coder" target="_blank"><svg width="14" height="14" viewBox="0 0 14 14" fill="#c9a84c"><path d="M7 0C3.13 0 0 3.13 0 7c0 3.09 2.01 5.71 4.78 6.65.35.07.47-.16.47-.34 0-.17-.01-.62-.01-1.2-1.72.37-2.16-.49-2.3-.94-.07-.2-.37-.94-.76-1.13-.26-.15-.63-.52-.01-.53.59-.01 1.01.54 1.15.76.67 1.12 1.75.8 2.18.64.07-.51.27-.85.51-1.05-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.58.82-2.14-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.14 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.41.48.34A7.01 7.01 0 0014 7c0-3.87-3.13-7-7-7z"/></svg> @erezatmacaa-coder</a>
         <a href="mailto:erez.atmaca@hotmail.com"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="#c9a84c" stroke-width="1.2"><rect x="1.5" y="3" width="11" height="9" rx="1.5"/><path d="M1.5 4.5l5.5 3.5 5.5-3.5"/></svg> erez.atmaca@hotmail.com</a>
       </div></div>
-      <form class="contact-form" id="contactForm">
+      <form class="contact-form" action="https://formsubmit.co/info@sameterezatmaca.com" method="POST">
+        <input type="hidden" name="_next" value="https://sameterezatmaca.com/?sent=ok">
+        <input type="hidden" name="_subject" value="sameterezatmaca.com mesaj">
         <input type="text" name="isim" data-i18n="form_name" placeholder="Adın" required class="cf-input">
         <input type="email" name="email" data-i18n="form_email" placeholder="E-posta" required class="cf-input">
-        <textarea name="mesaj" data-i18n="form_msg" placeholder="Mesajın..." rows="4" required class="cf-input"></textarea>
-        <button type="submit" class="btn btn-primary" id="formBtn" data-i18n="form_send">Gönder</button>
-        <div class="form-feedback" id="formFeedback"></div>
+        <textarea name="mesaj" data-i18n="form_msg" placeholder="Mesajın..." rows="4" required class="cf-input">
+        <button type="submit" class="btn btn-primary" data-i18n="form_send">Gönder</button>
       </form>
     </div>
   </div>
@@ -338,31 +336,6 @@ function setLang(l) {
 const saved = localStorage.getItem('lang') || 'tr';
 setLang(saved);
 document.getElementById('langSelect').addEventListener('change', e => setLang(e.target.value));
-
-document.getElementById('contactForm').addEventListener('submit', async function(e) {
-  e.preventDefault();
-  const btn = document.getElementById('formBtn');
-  const fb = document.getElementById('formFeedback');
-  fb.className = 'form-feedback';
-  fb.textContent = '';
-  btn.disabled = true;
-  btn.textContent = '...';
-  try {
-    const r = await fetch('https://formsubmit.co/ajax/info@sameterezatmaca.com', {
-      method: 'POST', headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-      body: JSON.stringify({ isim: this.isim.value, email: this.email.value, mesaj: this.mesaj.value, _subject: 'sameterezatmaca.com mesaj', _captcha: 'false' })
-    });
-    if (r.ok) { fb.textContent = btn.dataset.i18n ? t[document.documentElement.getAttribute('data-lang')].form_ok : 'Mesaj gonderildi ✓'; fb.className = 'form-feedback show success'; this.reset(); }
-    else { fb.textContent = btn.dataset.i18n ? t[document.documentElement.getAttribute('data-lang')].form_err : 'Hata olustu, tekrar dene'; fb.className = 'form-feedback show error'; }
-  } catch(e) {
-    fb.textContent = btn.dataset.i18n ? t[document.documentElement.getAttribute('data-lang')].form_err : 'Hata olustu, tekrar dene';
-    fb.className = 'form-feedback show error';
-  }
-  btn.disabled = false;
-  const lang = document.documentElement.getAttribute('data-lang');
-  const sendText = t[lang]?.form_send || 'Gönder';
-  btn.textContent = sendText;
-});
 
 try {
 gsap.registerPlugin(ScrollTrigger);
