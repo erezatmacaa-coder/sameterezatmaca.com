@@ -56,7 +56,7 @@ nav.scrolled{background:rgba(8,8,11,.8);border-bottom-color:rgba(201,168,76,.04)
 @media(max-width:900px){.hero-row{grid-template-columns:1fr;gap:3rem;}}
 .hero-title{font-size:clamp(3rem,7vw,6.5rem);font-weight:800;letter-spacing:-.04em;line-height:1.02;}
 .hero-title .line{display:block;overflow:hidden;}
-.hero-title .line span{display:block;transform:translateY(100%);}
+.hero-title .line span{display:block;}
 .hero-title .gold{background:linear-gradient(135deg,#c9a84c 0%,#e8d5a3 40%,#c9a84c 70%,#b8943a 100%);background-size:200% auto;-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;animation:goldFlow 8s ease infinite;}
 @keyframes goldFlow{0%{background-position:0 50%}50%{background-position:100% 50%}100%{background-position:0 50%}}
 .hero-desc{font-size:1rem;color:rgba(232,230,227,.3);line-height:1.8;max-width:420px;margin-top:2rem;font-weight:300;}
@@ -221,12 +221,12 @@ footer p{font-size:.6rem;color:rgba(232,230,227,.1);font-weight:400;letter-spaci
       <div class="skills-desc">AI destekli öğrenme ile geliştirilen beceriler</div>
     </div>
     <div class="skills-list">
-      <div class="sk-item"><span class="sk-num">01</span><span class="sk-name">Python</span><span class="sk-level">AI Destekli</span><div class="sk-track"><div class="sk-fill" data-w="65"></div></div></div>
-      <div class="sk-item"><span class="sk-num">02</span><span class="sk-name">HTML & CSS</span><span class="sk-level">Orta Düzey</span><div class="sk-track"><div class="sk-fill" data-w="72"></div></div></div>
-      <div class="sk-item"><span class="sk-num">03</span><span class="sk-name">JavaScript</span><span class="sk-level">Başlangıç</span><div class="sk-track"><div class="sk-fill" data-w="38"></div></div></div>
-      <div class="sk-item"><span class="sk-num">04</span><span class="sk-name">Prompt Engineering</span><span class="sk-level">İleri Düzey</span><div class="sk-track"><div class="sk-fill" data-w="88"></div></div></div>
-      <div class="sk-item"><span class="sk-num">05</span><span class="sk-name">Git & GitHub</span><span class="sk-level">Orta Düzey</span><div class="sk-track"><div class="sk-fill" data-w="60"></div></div></div>
-      <div class="sk-item"><span class="sk-num">06</span><span class="sk-name">Öğrenme & Merak</span><span class="sk-level">Sınır Yok</span><div class="sk-track"><div class="sk-fill" data-w="100"></div></div></div>
+      <div class="sk-item"><span class="sk-num">01</span><span class="sk-name">Python</span><span class="sk-level">AI Destekli</span><div class="sk-track"><div class="sk-fill" style="width:65%" data-w="65"></div></div></div>
+      <div class="sk-item"><span class="sk-num">02</span><span class="sk-name">HTML & CSS</span><span class="sk-level">Orta Düzey</span><div class="sk-track"><div class="sk-fill" style="width:72%" data-w="72"></div></div></div>
+      <div class="sk-item"><span class="sk-num">03</span><span class="sk-name">JavaScript</span><span class="sk-level">Başlangıç</span><div class="sk-track"><div class="sk-fill" style="width:38%" data-w="38"></div></div></div>
+      <div class="sk-item"><span class="sk-num">04</span><span class="sk-name">Prompt Engineering</span><span class="sk-level">İleri Düzey</span><div class="sk-track"><div class="sk-fill" style="width:88%" data-w="88"></div></div></div>
+      <div class="sk-item"><span class="sk-num">05</span><span class="sk-name">Git & GitHub</span><span class="sk-level">Orta Düzey</span><div class="sk-track"><div class="sk-fill" style="width:60%" data-w="60"></div></div></div>
+      <div class="sk-item"><span class="sk-num">06</span><span class="sk-name">Öğrenme & Merak</span><span class="sk-level">Sınır Yok</span><div class="sk-track"><div class="sk-fill" style="width:100%" data-w="100"></div></div></div>
     </div>
   </div>
 </section>
@@ -264,22 +264,17 @@ footer p{font-size:.6rem;color:rgba(232,230,227,.1);font-weight:400;letter-spaci
 </footer>
 
 <script>
-// === GSAP ENTRANCE ===
+// Hero text reveal (GSAP ile animasyon, yuklenmezse icerik gorunur kalir)
+try {
 gsap.registerPlugin(ScrollTrigger);
-
-// Hero text reveal
-gsap.to('.hero-title .line:nth-child(1) span', { duration: 1.2, y: 0, ease: 'power4.out', delay: 0.15 });
-gsap.to('.hero-title .line:nth-child(2) span', { duration: 1.2, y: 0, ease: 'power4.out', delay: 0.35 });
-gsap.from('.hero-tag', { duration: 0.8, y: 15, opacity: 0, ease: 'power4.out', delay: 0.1 });
-gsap.from('.hero-desc', { duration: 0.8, y: 20, opacity: 0, ease: 'power4.out', delay: 0.55 });
-gsap.from('.hero-actions', { duration: 0.8, y: 20, opacity: 0, ease: 'power4.out', delay: 0.75 });
-gsap.from('.hero-visual', { duration: 1.2, scale: 0.75, opacity: 0, ease: 'back.out(1.7)', delay: 0.45 });
-
-// Scroll reveals
+gsap.from('.hero-title .line:nth-child(1) span', { duration: 1, yPercent: 100, ease: 'power4.out', delay: 0.15 });
+gsap.from('.hero-title .line:nth-child(2) span', { duration: 1, yPercent: 100, ease: 'power4.out', delay: 0.35 });
+gsap.from('.hero-tag', { duration: 0.6, y: 15, opacity: 0, ease: 'power4.out', delay: 0.1 });
+gsap.from('.hero-desc', { duration: 0.6, y: 20, opacity: 0, ease: 'power4.out', delay: 0.55 });
+gsap.from('.hero-actions', { duration: 0.6, y: 20, opacity: 0, ease: 'power4.out', delay: 0.75 });
+gsap.from('.hero-visual', { duration: 1, scale: 0.75, opacity: 0, ease: 'back.out(1.7)', delay: 0.45 });
 gsap.from('#about .about-grid > *', { scrollTrigger: { trigger: '#about', start: 'top 80%' }, duration: 1, x: -50, opacity: 0, stagger: 0.15, ease: 'power4.out' });
-gsap.from('.skills-hdr', { scrollTrigger: { trigger: '#skills', start: 'top 80%' }, duration: 1, y: -30, opacity: 0, ease: 'power4.out' });
 gsap.from('.sk-item', { scrollTrigger: { trigger: '#skills', start: 'top 75%' }, duration: 0.7, y: 15, opacity: 0, stagger: 0.06, ease: 'power4.out' });
-
 document.querySelectorAll('.sk-item').forEach(row => {
   ScrollTrigger.create({
     trigger: row, start: 'top 80%',
@@ -287,31 +282,22 @@ document.querySelectorAll('.sk-item').forEach(row => {
     once: true
   });
 });
-
-gsap.from('.proj-title', { scrollTrigger: { trigger: '#projects', start: 'top 80%' }, duration: 1, y: -30, opacity: 0, ease: 'power4.out' });
 gsap.from('.proj', { scrollTrigger: { trigger: '#projects', start: 'top 70%' }, duration: 0.7, y: 20, opacity: 0, stagger: 0.05, ease: 'power4.out' });
-gsap.from('.contact-title', { scrollTrigger: { trigger: '#contact', start: 'top 80%' }, duration: 1, y: -30, opacity: 0, ease: 'power4.out' });
 gsap.from('.contact-links a', { scrollTrigger: { trigger: '#contact', start: 'top 70%' }, duration: 0.7, y: 15, opacity: 0, stagger: 0.06, ease: 'power4.out' });
+} catch(e) {}
+
+// Skill bar widths (JS olmadan da CSS ile gorunur)
+document.querySelectorAll('.sk-fill').forEach(b => { if (b.dataset.w) b.style.width = b.dataset.w + '%'; });
 
 // Scroll bar
-const bar = document.getElementById('progress');
 window.addEventListener('scroll', () => {
   const d = document.documentElement;
-  bar.style.width = ((d.scrollTop || document.body.scrollTop) / (d.scrollHeight - d.clientHeight) * 100) + '%';
+  document.getElementById('progress').style.width = ((d.scrollTop || document.body.scrollTop) / (d.scrollHeight - d.clientHeight) * 100) + '%';
 });
 
 // Nav scroll
-const nav = document.querySelector('nav');
-window.addEventListener('scroll', () => nav.classList.toggle('scrolled', window.scrollY > 50));
-
-// 3D tilt on proj cards
-document.querySelectorAll('.proj').forEach(c => {
-  c.addEventListener('mousemove', e => {
-    const r = c.getBoundingClientRect();
-    c.style.transform = `perspective(800px) rotateY(${((e.clientX - r.left) / r.width - 0.5) * 4}deg) rotateX(${(-(e.clientY - r.top) / r.height + 0.5) * 4}deg)`;
-  });
-  c.addEventListener('mouseleave', () => c.style.transform = '');
-});
+document.querySelector('nav').classList.toggle('scrolled', window.scrollY > 50);
+window.addEventListener('scroll', () => document.querySelector('nav').classList.toggle('scrolled', window.scrollY > 50));
 </script>
 </body>
 </html>
