@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bilişim Çalışma Notları</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Segoe UI',Arial,sans-serif;background:#f0f2f5;color:#1a1a2e;line-height:1.6}
+header{background:linear-gradient(135deg,#1a5276,#2e86c1);color:white;padding:30px 20px;text-align:center}
+header h1{font-size:28px;margin-bottom:5px}
+header p{font-size:14px;opacity:.9}
+nav{background:#1a1a2e;padding:10px 0;position:sticky;top:0;z-index:10;overflow-x:auto;white-space:nowrap}
+nav a{display:inline-block;color:#fff;padding:8px 18px;text-decoration:none;font-size:13px;border-radius:4px;margin:0 3px}
+nav a:hover{background:#2e86c1}
+.container{max-width:900px;margin:0 auto;padding:20px}
+.card{background:white;border-radius:10px;box-shadow:0 2px 8px rgba(0,0,0,.1);padding:25px;margin-bottom:20px}
+.card h2{color:#1a5276;border-bottom:3px solid #2e86c1;padding-bottom:8px;margin-bottom:15px;font-size:20px}
+.card h3{color:#2e86c1;margin:15px 0 8px;font-size:16px}
+pre{background:#f5f5f5;border:1px solid #ddd;border-radius:6px;padding:12px 15px;font-size:14px;font-family:'Consolas','Courier New',monospace;overflow-x:auto;margin:8px 0;line-height:1.4}
+code{font-family:'Consolas','Courier New',monospace;background:#eef;padding:2px 5px;border-radius:3px}
+.hatali{background:#fff0f0;border-left:4px solid #e74c3c}
+.dogru{background:#f0fff0;border-left:4px solid #27ae60}
+.uyari{background:#fef9e7;border:1px solid #f39c12;border-radius:6px;padding:12px 15px;margin:10px 0;font-size:14px}
+.uyari strong{color:#d35400}
+.ozet{background:#eaf2f8;border:1px solid #1a5276;border-radius:6px;padding:15px;margin:15px 0}
+.ozet h3{color:#1a5276;margin-top:0}
+.ozet li{margin:5px 0;font-size:14px}
+.flow{background:#fafafa;border:1px dashed #999;border-radius:6px;padding:12px 15px;font-size:12px;font-family:'Consolas',monospace;line-height:1.3;white-space:pre;overflow-x:auto;margin:8px 0}
+.ok{color:#27ae60;font-weight:bold}
+.no{color:#e74c3c;font-weight:bold}
+footer{background:#1a1a2e;color:#888;text-align:center;padding:15px;font-size:13px;margin-top:20px}
+@media(max-width:600px){header h1{font-size:22px}.container{padding:10px}.card{padding:15px}pre{font-size:13px}}
+</style>
+</head>
+<body>
+
+<header>
+<h1>📘 Bilişim Sınavı Çalışma Notları</h1>
+<p>Python temel konular - Akış şemaları, kod örnekleri ve sık yapılan hatalar</p>
+</header>
+
+<nav>
+<a href="#print">print()</a>
+<a href="#if">if-elif-else</a>
+<a href="#hatali">Hatalı Kod</a>
+<a href="#indirim">İndirim Sorusu</a>
+<a href="#akis">Akış Şemaları</a>
+<a href="#input">input()</a>
+<a href="#tek-cift">Tek/Çift</a>
+<a href="#poz-neg">Pozitif/Negatif</a>
+<a href="#arasi">İki Sayı Arası</a>
+<a href="#ozet">Özet</a>
+</nav>
+
+<div class="container">
+
+<div class="card" id="print">
+<h2>1. print() Kullanımı</h2>
+<p><strong>Kural:</strong> Tırnak içindeki yazı aynen yazılır. Tırnak yoksa işlem yapılır.</p>
+<pre><b>print("3+5")</b>   # 3+5 (yazı)
+<b>print(3+5)</b>     # 8   (işlem)
+
+<b>print("10-2")</b>  # 10-2
+<b>print(10-2)</b>    # 8
+
+<b>print("Merhaba")</b>  # Merhaba
+<b>print(5 * 3)</b>      # 15
+<b>print("5 * 3")</b>    # 5 * 3</pre>
+<div class="uyari"><strong>ÖNEMLİ:</strong> <code>print("3+5")</code> ekrana <b>3+5</b> yazar. <code>print(3+5)</code> ekrana <b>8</b> yazar. Tırnak varsa yazı, yoksa işlem!</div>
+</div>
+
+<div class="card" id="if">
+<h2>2. if - elif - else Yapısı</h2>
+<pre>puan = 75
+
+<b>if puan >= 85:</b>
+    print("Pekiyi")
+<b>elif puan >= 70:</b>
+    print("İyi")
+<b>elif puan >= 50:</b>
+    print("Geçtin")
+<b>else:</b>
+    print("Kaldın")</pre>
+<div class="uyari"><strong>Kural:</strong> Önce en yüksek değer kontrol edilmeli! Aksi halde <code>elif</code> asla çalışmaz.</div>
+</div>
+
+<div class="card" id="hatali">
+<h2>3. Hatalı Kod Bulma</h2>
+
+<h3>Hata 1: Sıralama Hatası</h3>
+<pre class="hatali">puan = 75
+<b>if puan >= 50:</b>         # 75 >= 50 Doğru, bu ÇALIŞIR
+    print("Geçtin")
+<b>elif puan >= 70:</b>       # Bu asla çalışmaz! İlk if doğruydu
+    print("İyi")</pre>
+<div class="uyari"><strong>Çözüm:</strong> Önce 85, sonra 70, sonra 50 kontrol edilmeli!</div>
+
+<h3>Hata 2: = ile == Karıştırmak</h3>
+<pre class="hatali">if <b>sayi = 10</b>:    # HATA! = atama yapar
+    print("On")</pre>
+<pre class="dogru">if <b>sayi == 10</b>:   # DOĞRU! == karşılaştırma yapar
+    print("On")</pre>
+
+<h3>Hata 3: String ile Sayı Karşılaştırmak</h3>
+<pre class="hatali">yas = "18"       # Bu yazı (string)
+if yas >= 18:    # HATA! yazı ile sayı karşılaştırılmaz
+    print("Reşit")</pre>
+<pre class="dogru">yas = 18         # Sayı olmalı!
+if yas >= 18:
+    print("Reşit")</pre>
+
+<h3>Hata 4: else'den Sonra Koşul Yazmak</h3>
+<pre class="hatali">if yas > 18:
+    print("Reşit")
+<b>else yas == 18:</b>    # HATA!
+    print("Tam 18")</pre>
+<pre class="dogru">if yas > 18:
+    print("Reşit")
+<b>elif yas == 18:</b>
+    print("Tam 18")
+<b>else:</b>
+    print("Reşit değil")</pre>
+
+<h3>Hata 5: İki Nokta (:) Unutmak</h3>
+<pre class="hatali">if yas > 18     <b># HATA! : yok</b>
+    print("Reşit")</pre>
+<pre class="dogru">if yas > 18<b>:</b>
+    print("Reşit")</pre>
+</div>
+
+<div class="card" id="indirim">
+<h2>4. 60 Paket İndirim Sorusu</h2>
+<p><strong>SORU:</strong> 60 paket ve üzerine %20 indirim. Kaç paket alınırsa ne kadar ödenir?</p>
+<pre>birim_fiyat = 10
+paket = int(input("Paket sayısı: "))
+
+toplam = paket * birim_fiyat
+
+<b>if paket >= 60:</b>
+    indirim = toplam * 0.20
+    odenecek = toplam - indirim
+    print(f"İndirimli: {odenecek} TL")
+<b>else:</b>
+    print(f"İndirimsiz: {toplam} TL")</pre>
+
+<h3>Akış Şeması</h3>
+<div class="flow">        ┌─────────┐
+        │  BAŞLA  │
+        └────┬────┘
+             │
+        ┌────▼────┐
+        │ paket = │
+        │  oku    │
+        └────┬────┘
+             │
+        ┌────▼──────┐
+        │ toplam=   │
+        │ paket*10  │
+        └────┬──────┘
+             │
+        ┌────▼──────┐
+   ┌───│ paket     │
+   │   │ >= 60 ?   │───Hayır───┐
+   │   └────┬──────┘           │
+   │     Evet                  │
+   │       │                   │
+   │  ┌────▼──────┐      ┌─────▼──────┐
+   │  │ indirim   │      │ odenecek   │
+   │  │=toplam*0.2│      │ = toplam   │
+   │  └────┬──────┘      └─────┬──────┘
+   │       │                   │
+   │  ┌────▼──────┐            │
+   │  │ odenecek  │            │
+   │  │=toplam-   │            │
+   │  │ indirim   │            │
+   │  └────┬──────┘            │
+   │       │                   │
+   └───┬───┘                   │
+       │                       │
+  ┌────▼───────────────────────▼───┐
+  │   yazdır(odenecek)             │
+  └────────────┬───────────────────┘
+               │
+          ┌────▼──────┐
+          │   BİTİR   │
+          └───────────┘</div>
+</div>
+
+<div class="card" id="akis">
+<h2>5. Akış Şemaları</h2>
+
+<h3>Pozitif / Negatif / Sıfır</h3>
+<div class="flow">        ┌─────────┐
+        │  BAŞLA  │
+        └────┬────┘
+             │
+        ┌────▼────┐
+        │  sayi   │
+        │  = oku  │
+        └────┬────┘
+             │
+        ┌────▼────┐
+        │ sayi    │
+        │ > 0 ?   │──Evet──► "Pozitif"
+        └────┬────┘
+             │ Hayır
+        ┌────▼────┐
+        │ sayi    │
+        │ < 0 ?   │──Evet──► "Negatif"
+        └────┬────┘
+             │ Hayır
+             │
+          "Sıfır"
+             │
+        ┌────▼────┐
+        │ BİTİR  │
+        └─────────┘</div>
+
+<h3>Tek / Çift</h3>
+<div class="flow">        ┌─────────┐
+        │  BAŞLA  │
+        └────┬────┘
+             │
+        ┌────▼────┐
+        │  sayi   │
+        │  = oku  │
+        └────┬────┘
+             │
+        ┌────▼──────────┐
+        │ sayi % 2      │
+        │ == 0 ?        │──Evet──► "Çift"
+        └────┬──────────┘
+             │ Hayır
+             │
+           "Tek"
+             │
+        ┌────▼────┐
+        │ BİTİR  │
+        └─────────┘</div>
+</div>
+
+<div class="card" id="input">
+<h2>6. input() ile Veri Alma</h2>
+<div class="uyari"><strong>ÖNEMLİ:</strong> input() her zaman <b>yazı (string)</b> alır. Sayı ile işlem yapacaksan <code>int()</code> veya <code>float()</code> eklemeyi UNUTMA!</div>
+
+<h3>Örnek 1: Ad ve Yaş</h3>
+<pre>ad = input("Adınız: ")
+<b>yas = int(input("Yaşınız: "))</b>   # int() ekledik!
+
+print(f"Merhaba {ad}, {yas} yaşındasın.")</pre>
+
+<h3>Örnek 2: Vize - Final Ortalaması</h3>
+<pre>vize = float(input("Vize notu: "))
+final = float(input("Final notu: "))
+
+ortalama = vize * 0.40 + final * 0.60
+
+<b>if ortalama >= 50:</b>
+    print(f"Geçtin! Ortalaman: {ortalama}")
+<b>else:</b>
+    print(f"Kaldın! Ortalaman: {ortalama}")</pre>
+</div>
+
+<div class="card" id="tek-cift">
+<h2>7. Tek / Çift Bulma</h2>
+<pre>sayi = int(input("Bir sayı girin: "))
+
+<b>if sayi % 2 == 0:</b>
+    print("Çift")
+<b>else:</b>
+    print("Tek")</pre>
+<p><code>%</code> işareti kalanı (mod) bulur. Bir sayının 2'ye bölümünden kalan 0 ise çifttir.</p>
+</div>
+
+<div class="card" id="poz-neg">
+<h2>8. Pozitif / Negatif / Sıfır</h2>
+<pre>sayi = int(input("Bir sayı girin: "))
+
+<b>if sayi > 0:</b>
+    print("Pozitif")
+<b>elif sayi < 0:</b>
+    print("Negatif")
+<b>else:</b>
+    print("Sıfır")</pre>
+</div>
+
+<div class="card" id="arasi">
+<h2>9. İki Sayı Arasındakileri Listeleme</h2>
+<pre>sayi1 = int(input("Birinci sayı: "))
+sayi2 = int(input("İkinci sayı: "))
+
+bas = min(sayi1, sayi2)
+son = max(sayi1, sayi2)
+
+<b>for i in range(bas, son + 1):</b>
+    print(i)</pre>
+<div class="uyari"><strong>Not:</strong> <code>min()</code> küçük, <code>max()</code> büyük sayıyı alır. <code>+1</code> eklenir çünkü range son değeri dahil etmez.</div>
+
+<h3>Akış Şeması</h3>
+<div class="flow">        ┌─────────┐
+        │  BAŞLA  │
+        └────┬────┘
+             │
+        ┌────▼────┐
+        │  sayi1  │
+        │  = oku  │
+        └────┬────┘
+             │
+        ┌────▼────┐
+        │  sayi2  │
+        │  = oku  │
+        └────┬────┘
+             │
+        ┌────▼────┐
+        │ bas=min │
+        │ son=max │
+        └────┬────┘
+             │
+        ┌────▼────┐
+        │ i=bas   │
+        │ i<=son  │───Hayır───┐
+        └────┬────┘           │
+             │ Evet           │
+        ┌────▼────┐           │
+        │ yazdır  │           │
+        │  (i)    │           │
+        └────┬────┘           │
+             │                │
+        ┌────▼────┐           │
+        │  i=i+1  │           │
+        └────┬────┘           │
+             │                │
+             └────────┐       │
+                      │       │
+                 ┌────▼───────▼──┐
+                 │    BİTİR      │
+                 └───────────────┘</div>
+</div>
+
+<div class="card" id="ozet">
+<h2>Özet: Sık Yapılan Hatalar</h2>
+<div class="ozet">
+<ol>
+<li><b>= ile == karıştırmak:</b> <span class="no">if x = 5</span> (atama) &nbsp;→&nbsp; <span class="ok">if x == 5</span> (karşılaştırma)</li>
+<li><b>int() eklemeyi unutmak:</b> <span class="no">input()</span> string alır &nbsp;→&nbsp; <span class="ok">int(input())</span> sayı alır</li>
+<li><b>print() farkı:</b> <span class="no">print("3+5")</span> yazıdır &nbsp;→&nbsp; <span class="ok">print(3+5)</span> işlemdir</li>
+<li><b>if sıralaması:</b> Önce en yüksek değer kontrol edilmeli</li>
+<li><b>İki nokta unutmak:</b> <span class="no">if x > 5</span> &nbsp;→&nbsp; <span class="ok">if x > 5:</span></li>
+<li><b>else'ten sonra koşul yazılmaz:</b> <span class="ok">else:</span> &nbsp;✅&nbsp; <span class="no">else x > 5:</span> ❌</li>
+<li><b>range() son değer:</b> <code>range(1, 5)</code> = 1,2,3,4 (5 dahil değil!)</li>
+<li><b>% işareti:</b> Kalan bulur. <code>sayi % 2 == 0</code> ise çift sayıdır</li>
+</ol>
+</div>
+</div>
+
+</div>
+
+<footer>
+Bilişim Sınavı Çalışma Notları &copy; 2026
+</footer>
+
+<script>
+// Smooth scroll for nav links
+document.querySelectorAll('nav a').forEach(a => {
+a.addEventListener('click', e => {
+e.preventDefault();
+const id = a.getAttribute('href').slice(1);
+document.getElementById(id).scrollIntoView({behavior:'smooth'});
+});
+});
+</script>
+</body>
+</html>
