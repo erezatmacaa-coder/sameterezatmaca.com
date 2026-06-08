@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="tr" data-lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Samet Erez Atmaca</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:'Inter',sans-serif;background:#08080b;color:#e8e6e3;overflow-x:hidden}
+::selection{background:rgba(201,168,76,.2);color:#fff}
+#bg{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0;pointer-events:none;overflow:hidden}
+#bg .blob{position:absolute;border-radius:50%;filter:blur(80px)}
+#bg .blob:nth-child(1){width:50vw;height:50vw;background:rgba(201,168,76,.04);top:-10%;left:-10%;animation:blob1 25s ease-in-out infinite}
+#bg .blob:nth-child(2){width:40vw;height:40vw;background:rgba(180,140,60,.03);bottom:-5%;right:-5%;animation:blob2 30s ease-in-out infinite}
+#bg .blob:nth-child(3){width:35vw;height:35vw;background:rgba(201,168,76,.02);top:40%;left:60%;animation:blob3 20s ease-in-out infinite}
+#bg .blob:nth-child(4){width:30vw;height:30vw;background:rgba(160,120,50,.025);top:60%;left:-5%;animation:blob4 28s ease-in-out infinite}
+#bg .blob:nth-child(5){width:45vw;height:45vw;background:rgba(220,200,160,.015);top:-20%;left:30%;animation:blob5 22s ease-in-out infinite}
+@keyframes blob1{0%,100%{transform:translate(0,0) scale(1)}25%{transform:translate(100px,-60px) scale(1.1)}50%{transform:translate(60px,80px) scale(.9)}75%{transform:translate(-80px,40px) scale(1.05)}}
+@keyframes blob2{0%,100%{transform:translate(0,0) scale(1)}33%{transform:translate(-80px,-40px) scale(1.15)}66%{transform:translate(40px,-80px) scale(.9)}}
+@keyframes blob3{0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(-60px,60px) scale(1.1)}}
+@keyframes blob4{0%,100%{transform:translate(0,0) scale(1)}33%{transform:translate(80px,-30px) scale(1.08)}66%{transform:translate(-40px,50px) scale(.95)}}
+@keyframes blob5{0%,100%{transform:translate(0,0) scale(1)}25%{transform:translate(-50px,-80px) scale(1.05)}75%{transform:translate(60px,60px) scale(.95)}}
+#noise{position:fixed;top:0;left:0;width:100%;height:100%;z-index:1;pointer-events:none;opacity:.25;mix-blend-mode:overlay}
+#noise svg{width:100%;height:100%}
+#progress{position:fixed;top:0;left:0;height:2px;z-index:999;width:0%;background:linear-gradient(90deg,transparent,#c9a84c,transparent)}
+nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:1.8rem 3rem;display:flex;justify-content:space-between;align-items:center;background:rgba(8,8,11,.3);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-bottom:1px solid rgba(255,255,255,.02);transition:background .5s}
+nav.scrolled{background:rgba(8,8,11,.8);border-bottom-color:rgba(201,168,76,.04)}
+.nlogo{font-weight:800;font-size:1.1rem;letter-spacing:2px;color:#e8e6e3;text-decoration:none;border:1px solid rgba(201,168,76,.15);padding:.3rem .7rem;border-radius:4px;transition:border-color .3s}
+.nlogo:hover{border-color:rgba(201,168,76,.4)}
+.nlogo span{color:#c9a84c}
+.nlinks{display:flex;gap:2.8rem;list-style:none}
+.nlinks a{font-size:.65rem;color:rgba(232,230,227,.2);text-decoration:none;letter-spacing:.15em;text-transform:uppercase;transition:color .4s;font-weight:500;position:relative}
+.nlinks a::after{content:'';position:absolute;bottom:-4px;left:0;width:0;height:1px;background:#c9a84c;transition:width .5s cubic-bezier(.16,1,.3,1);border-radius:2px}
+.nlinks a:hover::after{width:100%}
+.nlinks a:hover{color:#e8e6e3}
+.lang-select{margin-left:2rem}
+.lang-btn{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);color:rgba(232,230,227,.35);padding:.3rem .8rem;border-radius:6px;font-size:.6rem;font-weight:600;cursor:pointer;transition:all .3s;font-family:'Inter',sans-serif;letter-spacing:.02em}
+.lang-btn:hover{background:rgba(201,168,76,.06);border-color:rgba(201,168,76,.15);color:#c9a84c}
+section{position:relative;z-index:2;padding:0 3rem}
+.section-inner{max-width:1100px;width:100%;margin:0 auto;padding:8rem 0}
+.section-tag{font-size:.55rem;text-transform:uppercase;letter-spacing:.3em;color:rgba(201,168,76,.4);font-weight:500;margin-bottom:1.2rem;display:flex;align-items:center;gap:.8rem}
+.section-tag::before{content:'';width:24px;height:1px;background:rgba(201,168,76,.15)}
+#hero{min-height:100vh;display:flex;align-items:center;padding:0 3rem}
+.hero-inner{max-width:1100px;width:100%;margin:0 auto;padding:8rem 0}
+.hero-tag{font-size:.6rem;text-transform:uppercase;letter-spacing:.3em;color:rgba(201,168,76,.5);font-weight:500;margin-bottom:2rem}
+.hero-row{display:grid;grid-template-columns:1fr 300px;gap:5rem;align-items:center}
+@media(max-width:860px){.hero-row{grid-template-columns:1fr;gap:2.5rem}.hero-visual{order:-1}}
+.hero-title{font-size:clamp(2.8rem,7vw,6rem);font-weight:800;letter-spacing:-.04em;line-height:1;margin-bottom:.5rem}
+.hero-title .line{display:block;overflow:hidden}
+.hero-title .line span{display:block}
+.hero-title .gold{background:linear-gradient(135deg,#c9a84c 0%,#e8d5a3 40%,#c9a84c 70%,#b8943a 100%);background-size:200% auto;-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;animation:goldFlow 8s ease infinite}
+@keyframes goldFlow{0%{background-position:0 50%}50%{background-position:100% 50%}100%{background-position:0 50%}}
+.hero-desc{font-size:1rem;color:rgba(232,230,227,.3);line-height:1.8;max-width:420px;margin-top:1.5rem;font-weight:300}
+.hero-actions{display:flex;gap:1rem;margin-top:2rem;flex-wrap:wrap}
+.btn{display:inline-flex;align-items:center;gap:.6rem;padding:.8rem 2.2rem;border-radius:100px;font-size:.8rem;font-weight:600;text-decoration:none;transition:all .4s;border:none;cursor:pointer}
+.btn-primary{background:#c9a84c;color:#08080b}
+.btn-primary:hover{background:#dbbd6a;transform:translateY(-2px);box-shadow:0 8px 30px rgba(201,168,76,.2)}
+.btn-outline{background:transparent;color:rgba(232,230,227,.4);border:1px solid rgba(255,255,255,.06)}
+.btn-outline:hover{color:#e8e6e3;border-color:rgba(201,168,76,.2);transform:translateY(-2px);background:rgba(201,168,76,.03)}
+.hero-visual{position:relative;width:280px;height:280px;justify-self:center}
+@media(max-width:860px){.hero-visual{width:200px;height:200px}}
+.hero-visual::before{content:'';position:absolute;inset:-6px;border-radius:50%;background:linear-gradient(135deg,#c9a84c,rgba(201,168,76,.2),#c9a84c);z-index:-1;opacity:.6;animation:ringPulse 3s ease-in-out infinite}
+@keyframes ringPulse{0%,100%{opacity:.4;transform:scale(1)}50%{opacity:.8;transform:scale(1.02)}}
+.hero-visual .photo{width:100%;height:100%;border-radius:50%;overflow:hidden;position:relative;border:2px solid rgba(201,168,76,.08)}
+.hero-visual .photo img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .8s}
+.hero-visual:hover .photo img{transform:scale(1.06)}
+.hero-visual .photo::after{content:'';position:absolute;inset:0;border-radius:50%;background:linear-gradient(135deg,rgba(201,168,76,.1),transparent 50%);pointer-events:none}
+.about-text{max-width:700px}
+.about-title{font-size:clamp(1.6rem,4vw,2.8rem);font-weight:700;letter-spacing:-.03em;line-height:1.15;margin-bottom:1.5rem}
+.about-title span{color:rgba(232,230,227,.08);font-weight:300}
+.about-text p{color:rgba(232,230,227,.35);font-size:.95rem;line-height:1.9;font-weight:300;margin-top:1.2rem}
+.about-text p:first-child{margin-top:0}
+.about-text strong{color:rgba(232,230,227,.8);font-weight:500}
+.skills-hdr{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:3rem;flex-wrap:wrap;gap:1rem}
+.skills-title{font-size:clamp(1.6rem,4vw,2.5rem);font-weight:700;letter-spacing:-.03em;line-height:1.15}
+.skills-title span{color:rgba(232,230,227,.08);font-weight:300}
+.skills-desc{font-size:.8rem;color:rgba(232,230,227,.2);max-width:220px;text-align:right;line-height:1.7;font-weight:300}
+.skills-list{display:flex;flex-direction:column}
+.sk-item{display:grid;grid-template-columns:2rem 1fr auto;align-items:center;gap:1.5rem;padding:1.3rem 0;border-bottom:1px solid rgba(255,255,255,.02)}
+.sk-num{font-size:.65rem;color:rgba(232,230,227,.1);font-weight:500}
+.sk-name{font-size:clamp(.9rem,2vw,1.15rem);font-weight:600;letter-spacing:-.02em}
+.sk-level{font-size:.55rem;color:rgba(201,168,76,.5);font-weight:500;letter-spacing:.06em;text-align:right}
+.sk-track{height:1.5px;background:rgba(255,255,255,.02);border-radius:2px;overflow:hidden;grid-column:1/-1;margin-top:-.1rem}
+.sk-fill{height:100%;width:0;border-radius:2px;background:linear-gradient(90deg,#c9a84c,#e8d5a3);transition:width 1.6s cubic-bezier(.16,1,.3,1)}
+.proj-title{font-size:clamp(1.6rem,4vw,2.8rem);font-weight:700;letter-spacing:-.03em;line-height:1.1;margin-bottom:3rem}
+.proj-title span{color:rgba(232,230,227,.08);font-weight:300}
+.proj-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.02);border-radius:10px;overflow:hidden}
+@media(max-width:800px){.proj-grid{grid-template-columns:1fr}}
+.proj{background:#08080b;padding:2rem;display:flex;flex-direction:column;transition:background .4s}
+.proj:hover{background:rgba(201,168,76,.015)}
+.proj .p-id{font-size:.55rem;color:rgba(232,230,227,.06);font-weight:500;margin-bottom:1rem}
+.proj .p-badge{font-size:.5rem;text-transform:uppercase;letter-spacing:.08em;padding:.2rem .6rem;border-radius:4px;width:fit-content;margin-bottom:1rem;font-weight:500}
+.proj .p-badge.done{color:#c9a84c;background:rgba(201,168,76,.05);border:1px solid rgba(201,168,76,.06)}
+.proj .p-badge.wip{color:#e8d5a3;background:rgba(232,213,163,.04);border:1px solid rgba(232,213,163,.06)}
+.proj .p-badge.plan{color:rgba(232,230,227,.15);background:rgba(255,255,255,.01);border:1px solid rgba(255,255,255,.02)}
+.proj .p-name{font-size:1rem;font-weight:700;letter-spacing:-.02em;margin-bottom:.6rem;transition:color .4s;text-decoration:none;color:#e8e6e3;display:block}
+.proj:hover .p-name{color:#c9a84c}
+.proj .p-desc{font-size:.75rem;line-height:1.7;color:rgba(232,230,227,.25);font-weight:300;flex:1;margin-bottom:1rem}
+.proj .p-tags{display:flex;flex-wrap:wrap;gap:.4rem}
+.proj .p-tags span{font-size:.5rem;padding:.2rem .6rem;border-radius:3px;background:rgba(255,255,255,.015);color:rgba(232,230,227,.2)}
+.proj .p-link{display:inline-flex;align-items:center;gap:.4rem;font-size:.6rem;color:rgba(201,168,76,.5);text-decoration:none;transition:color .3s;margin-top:1rem}
+.proj .p-link:hover{color:#c9a84c}
+.contact-title{font-size:clamp(1.6rem,4vw,2.8rem);font-weight:700;letter-spacing:-.03em;line-height:1.1;margin-bottom:2.5rem}
+.contact-title span{color:rgba(232,230,227,.08);font-weight:300;display:block}
+.contact-grid{display:grid;grid-template-columns:1fr 1fr;gap:3rem;align-items:start}
+@media(max-width:700px){.contact-grid{grid-template-columns:1fr;gap:2rem}}
+.contact-links{display:flex;flex-direction:column;gap:.6rem}
+.contact-links a{display:flex;align-items:center;gap:.6rem;padding:.8rem 1.5rem;border-radius:8px;border:1px solid rgba(255,255,255,.03);color:rgba(232,230,227,.35);text-decoration:none;font-size:.8rem;transition:all .35s;font-weight:400}
+.contact-links a:hover{color:#e8e6e3;border-color:rgba(201,168,76,.12);background:rgba(201,168,76,.025);transform:translateY(-2px)}
+.contact-form{display:flex;flex-direction:column;gap:.8rem}
+.cf-input{background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.08);border-radius:8px;padding:.8rem 1.2rem;font-size:.8rem;color:#e8e6e3;font-family:'Inter',sans-serif;transition:border-color .3s;outline:none;font-weight:400}
+.cf-input:focus{border-color:rgba(201,168,76,.35)}
+.cf-input::placeholder{color:rgba(232,230,227,.2)}
+textarea.cf-input{resize:vertical;min-height:100px}
+.contact-form .btn-primary{padding:.8rem 2rem;align-self:flex-start}
+.form-feedback{font-size:.7rem;padding:.4rem 0;opacity:0;transition:opacity .4s}
+.form-feedback.show{opacity:1;color:#c9a84c}
+
+footer{border-top:1px solid rgba(255,255,255,.02);padding:2rem 3rem;display:flex;justify-content:space-between;align-items:center;position:relative;z-index:2}
+footer p{font-size:.6rem;color:rgba(232,230,227,.1);font-weight:400}
+@media(max-width:700px){
+nav{padding:1.2rem 1.5rem}
+.nlinks{display:none}
+.lang-select{display:block;margin-left:0}
+section{padding:0 1.5rem}
+.section-inner{padding:5rem 0}
+#hero{padding:0 1.5rem}
+footer{padding:1.5rem}
+#bg .blob{animation:none !important}
+#noise{display:none}
+}
+</style>
+</head>
+<body>
+
+<div id="bg"><div class="blob"></div><div class="blob"></div><div class="blob"></div><div class="blob"></div><div class="blob"></div></div>
+<div id="noise"><svg xmlns="http://www.w3.org/2000/svg"><filter id="n"><feTurbulence type="fractalNoise" baseFrequency=".65" numOctaves="3" stitchTiles="stitch"/><feColorMatrix type="saturate" values="0"/></filter><rect width="100%" height="100%" filter="url(#n)" opacity=".3"/></svg></div>
+<div id="progress"></div>
+
+<nav>
+  <a href="#" class="nlogo">S<span>E</span>A</a>
+  <ul class="nlinks">
+    <li><a href="#about" data-i18n="nav_about">Hakkımda</a></li>
+    <li><a href="#skills" data-i18n="nav_skills">Yetenekler</a></li>
+    <li><a href="#projects" data-i18n="nav_projects">Projeler</a></li>
+    <li><a href="#contact" data-i18n="nav_contact">İletişim</a></li>
+  </ul>
+  <select class="lang-select" id="langSelect">
+    <option value="tr">TR</option>
+    <option value="en">EN</option>
+    <option value="de">DE</option>
+    <option value="fr">FR</option>
+    <option value="es">ES</option>
+  </select>
+</nav>
+
+<section id="hero">
+  <div class="hero-inner">
+    <div class="hero-tag" data-i18n="hero_tag">AI Kaşifi</div>
+    <div class="hero-row">
+      <div>
+        <h1 class="hero-title">
+          <div class="line"><span>Samet Erez</span></div>
+          <div class="line"><span class="gold">Atmaca</span></div>
+        </h1>
+        <p class="hero-desc" data-i18n="hero_desc">Yapay zekayı keşfediyor, öğrendiklerimle projeler geliştiriyorum. Merakım beni ileri taşıyor.</p>
+        <div class="hero-actions">
+          <a href="#projects" class="btn btn-primary" data-i18n="hero_btn1">Projeleri Gör</a>
+          <a href="#contact" class="btn btn-outline" data-i18n="hero_btn2">İletişime Geç</a>
+        </div>
+      </div>
+      <div class="hero-visual">
+        <div class="photo"><img src="photo.jpg" alt="Samet Erez Atmaca"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="about">
+  <div class="section-inner">
+    <div class="section-tag" data-i18n="about_tag">Hakkımda</div>
+    <div class="about-text">
+      <h2 class="about-title" data-i18n="about_title">Merhaba, ben <span>Samet</span></h2>
+      <p data-i18n="about_p1">Yapay zeka alanına büyük bir ilgi duyuyorum. AI araçlarını kullanarak projeler geliştiriyor, her gün yeni şeyler öğreniyorum.</p>
+      <p data-i18n="about_p2">Yazılım konusunda yolun başındayım — temel düzeyde bilgim var. Ama AI sayesinde hayal ettiğim fikirleri gerçeğe dönüştürebiliyorum. <strong>Öğrenmeyi ve keşfetmeyi seviyorum.</strong></p>
+    </div>
+  </div>
+</section>
+
+<section id="skills">
+  <div class="section-inner">
+    <div class="section-tag" data-i18n="skills_tag">Yetenekler</div>
+    <div class="skills-hdr">
+      <h2 class="skills-title" data-i18n="skills_title">Kullandığım <span>Teknolojiler</span></h2>
+      <div class="skills-desc" data-i18n="skills_desc">AI destekli öğrenme ile geliştirilen beceriler</div>
+    </div>
+    <div class="skills-list">
+      <div class="sk-item"><span class="sk-num">01</span><span class="sk-name" data-i18n="sk_1_name">Python</span><span class="sk-level" data-i18n="sk_1_lvl">AI Destekli</span><div class="sk-track"><div class="sk-fill" style="width:65%" data-w="65"></div></div></div>
+      <div class="sk-item"><span class="sk-num">02</span><span class="sk-name" data-i18n="sk_2_name">HTML & CSS</span><span class="sk-level" data-i18n="sk_2_lvl">Orta Düzey</span><div class="sk-track"><div class="sk-fill" style="width:72%" data-w="72"></div></div></div>
+      <div class="sk-item"><span class="sk-num">03</span><span class="sk-name" data-i18n="sk_3_name">JavaScript</span><span class="sk-level" data-i18n="sk_3_lvl">Başlangıç</span><div class="sk-track"><div class="sk-fill" style="width:38%" data-w="38"></div></div></div>
+      <div class="sk-item"><span class="sk-num">04</span><span class="sk-name" data-i18n="sk_4_name">Prompt Engineering</span><span class="sk-level" data-i18n="sk_4_lvl">İleri Düzey</span><div class="sk-track"><div class="sk-fill" style="width:88%" data-w="88"></div></div></div>
+      <div class="sk-item"><span class="sk-num">05</span><span class="sk-name" data-i18n="sk_5_name">Git & GitHub</span><span class="sk-level" data-i18n="sk_5_lvl">Orta Düzey</span><div class="sk-track"><div class="sk-fill" style="width:60%" data-w="60"></div></div></div>
+      <div class="sk-item"><span class="sk-num">06</span><span class="sk-name" data-i18n="sk_6_name">Öğrenme & Merak</span><span class="sk-level" data-i18n="sk_6_lvl">Sınır Yok</span><div class="sk-track"><div class="sk-fill" style="width:100%" data-w="100"></div></div></div>
+    </div>
+  </div>
+</section>
+
+<section id="projects">
+  <div class="section-inner">
+    <div class="section-tag" data-i18n="proj_tag">Projeler</div>
+    <h2 class="proj-title" data-i18n="proj_title">Yaptığım <span>Çalışmalar</span></h2>
+    <div class="proj-grid">
+      <div class="proj">
+        <div class="p-id">001</div>
+        <span class="p-badge done" data-i18n="badge_done">Tamamlandı</span>
+        <a href="https://github.com/erezatmacaa-coder/Hardware-Monitor" target="_blank" rel="noopener" class="p-name">Hardware-Monitor</a>
+        <div class="p-desc" data-i18n="proj_1_desc">Anlık CPU ve RAM kullanımını terminal üzerinden takip eden sistem aracı.</div>
+        <div class="p-tags"><span>Python</span><span>psutil</span></div>
+        <a href="https://github.com/erezatmacaa-coder/Hardware-Monitor" target="_blank" rel="noopener" class="p-link">
+          <svg width="10" height="10" viewBox="0 0 14 14" fill="#c9a84c"><path d="M7 0C3.13 0 0 3.13 0 7c0 3.09 2.01 5.71 4.78 6.65.35.07.47-.16.47-.34 0-.17-.01-.62-.01-1.2-1.72.37-2.16-.49-2.3-.94-.07-.2-.37-.94-.76-1.13-.26-.15-.63-.52-.01-.53.59-.01 1.01.54 1.15.76.67 1.12 1.75.8 2.18.64.07-.51.27-.85.51-1.05-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.58.82-2.14-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.14 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.41.48.34A7.01 7.01 0 0014 7c0-3.87-3.13-7-7-7z"/></svg>
+          <span data-i18n="source_link">Kaynak Kod</span>
+        </a>
+      </div>
+      <div class="proj">
+        <div class="p-id">002</div>
+        <span class="p-badge wip" data-i18n="badge_wip">Geliştiriliyor</span>
+        <a href="https://github.com/erezatmacaa-coder/codecrew" target="_blank" rel="noopener" class="p-name">CodeCrew</a>
+        <div class="p-desc" data-i18n="proj_2_desc">8 yapay zeka ajanının birlikte çalışarak kod geliştirdiği multi-agent sistem.</div>
+        <div class="p-tags"><span>Python</span><span>FastAPI</span></div>
+        <a href="https://github.com/erezatmacaa-coder/codecrew" target="_blank" rel="noopener" class="p-link">
+          <svg width="10" height="10" viewBox="0 0 14 14" fill="#c9a84c"><path d="M7 0C3.13 0 0 3.13 0 7c0 3.09 2.01 5.71 4.78 6.65.35.07.47-.16.47-.34 0-.17-.01-.62-.01-1.2-1.72.37-2.16-.49-2.3-.94-.07-.2-.37-.94-.76-1.13-.26-.15-.63-.52-.01-.53.59-.01 1.01.54 1.15.76.67 1.12 1.75.8 2.18.64.07-.51.27-.85.51-1.05-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.58.82-2.14-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.14 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.41.48.34A7.01 7.01 0 0014 7c0-3.87-3.13-7-7-7z"/></svg>
+          <span data-i18n="source_link">Kaynak Kod</span>
+        </a>
+      </div>
+      <div class="proj">
+        <div class="p-id">003</div>
+        <span class="p-badge wip" data-i18n="badge_wip">Geliştiriliyor</span>
+        <a href="https://github.com/erezatmacaa-coder/studymate-ai" target="_blank" rel="noopener" class="p-name">studymate-ai</a>
+        <div class="p-desc" data-i18n="proj_3_desc">AI destekli çalışma asistanı. PDF yükle, AI ile özet ve quiz oluştur.</div>
+        <div class="p-tags"><span>FastAPI</span><span>React</span></div>
+        <a href="https://github.com/erezatmacaa-coder/studymate-ai" target="_blank" rel="noopener" class="p-link">
+          <svg width="10" height="10" viewBox="0 0 14 14" fill="#c9a84c"><path d="M7 0C3.13 0 0 3.13 0 7c0 3.09 2.01 5.71 4.78 6.65.35.07.47-.16.47-.34 0-.17-.01-.62-.01-1.2-1.72.37-2.16-.49-2.3-.94-.07-.2-.37-.94-.76-1.13-.26-.15-.63-.52-.01-.53.59-.01 1.01.54 1.15.76.67 1.12 1.75.8 2.18.64.07-.51.27-.85.51-1.05-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.58.82-2.14-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.14 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.41.48.34A7.01 7.01 0 0014 7c0-3.87-3.13-7-7-7z"/></svg>
+          <span data-i18n="source_link">Kaynak Kod</span>
+        </a>
+      </div>
+      <div class="proj">
+        <div class="p-id">004</div>
+        <span class="p-badge wip" data-i18n="badge_wip">Geliştiriliyor</span>
+        <a href="https://github.com/erezatmacaa-coder/codeForge" target="_blank" rel="noopener" class="p-name">codeForge</a>
+        <div class="p-desc" data-i18n="proj_4_desc">Terminal üzerinde çalışan AI destekli kod asistanı.</div>
+        <div class="p-tags"><span>Python</span><span>Gemini API</span></div>
+        <a href="https://github.com/erezatmacaa-coder/codeForge" target="_blank" rel="noopener" class="p-link">
+          <svg width="10" height="10" viewBox="0 0 14 14" fill="#c9a84c"><path d="M7 0C3.13 0 0 3.13 0 7c0 3.09 2.01 5.71 4.78 6.65.35.07.47-.16.47-.34 0-.17-.01-.62-.01-1.2-1.72.37-2.16-.49-2.3-.94-.07-.2-.37-.94-.76-1.13-.26-.15-.63-.52-.01-.53.59-.01 1.01.54 1.15.76.67 1.12 1.75.8 2.18.64.07-.51.27-.85.51-1.05-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.58.82-2.14-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.14 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.41.48.34A7.01 7.01 0 0014 7c0-3.87-3.13-7-7-7z"/></svg>
+          <span data-i18n="source_link">Kaynak Kod</span>
+        </a>
+      </div>
+      <div class="proj">
+        <div class="p-id">005</div>
+        <span class="p-badge done" data-i18n="badge_live">Yayında</span>
+        <a href="https://erezatmacaa-coder.github.io/prompt-kutuphanesi/" target="_blank" rel="noopener" class="p-name">Prompt Kütüphanesi</a>
+        <div class="p-desc" data-i18n="proj_5_desc">1000+ hazır AI promptu — kaydet, kategorize et, kopyala.</div>
+        <div class="p-tags"><span>HTML</span><span>CSS</span><span>JS</span></div>
+        <a href="https://github.com/erezatmacaa-coder/prompt-kutuphanesi" target="_blank" rel="noopener" class="p-link">
+          <svg width="10" height="10" viewBox="0 0 14 14" fill="#c9a84c"><path d="M7 0C3.13 0 0 3.13 0 7c0 3.09 2.01 5.71 4.78 6.65.35.07.47-.16.47-.34 0-.17-.01-.62-.01-1.2-1.72.37-2.16-.49-2.3-.94-.07-.2-.37-.94-.76-1.13-.26-.15-.63-.52-.01-.53.59-.01 1.01.54 1.15.76.67 1.12 1.75.8 2.18.64.07-.51.27-.85.51-1.05-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.58.82-2.14-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.14 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.41.48.34A7.01 7.01 0 0014 7c0-3.87-3.13-7-7-7z"/></svg>
+          <span data-i18n="source_link">Kaynak Kod</span>
+        </a>
+      </div>
+      <div class="proj">
+        <div class="p-id">006</div>
+        <span class="p-badge plan" data-i18n="badge_plan">Plan Aşaması</span>
+        <a href="https://github.com/erezatmacaa-coder/locamo" target="_blank" rel="noopener" class="p-name">locamo</a>
+        <div class="p-desc" data-i18n="proj_6_desc">Plan aşamasında olan yeni proje. Detaylar yakında.</div>
+        <div class="p-tags"><span data-i18n="coming_soon">Yakında</span></div>
+        <a href="https://github.com/erezatmacaa-coder/locamo" target="_blank" rel="noopener" class="p-link">
+          <svg width="10" height="10" viewBox="0 0 14 14" fill="#c9a84c"><path d="M7 0C3.13 0 0 3.13 0 7c0 3.09 2.01 5.71 4.78 6.65.35.07.47-.16.47-.34 0-.17-.01-.62-.01-1.2-1.72.37-2.16-.49-2.3-.94-.07-.2-.37-.94-.76-1.13-.26-.15-.63-.52-.01-.53.59-.01 1.01.54 1.15.76.67 1.12 1.75.8 2.18.64.07-.51.27-.85.51-1.05-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.58.82-2.14-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.14 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.41.48.34A7.01 7.01 0 0014 7c0-3.87-3.13-7-7-7z"/></svg>
+          <span data-i18n="source_link">Kaynak Kod</span>
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="contact">
+  <div class="section-inner">
+    <div class="section-tag" data-i18n="contact_tag">İletişim</div>
+    <h2 class="contact-title" data-i18n="contact_title">Bana <span>Ulaşın</span></h2>
+    <div class="contact-grid">
+      <div class="contact-info"><div class="contact-links">
+        <a href="mailto:info@sameterezatmaca.com"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="#c9a84c" stroke-width="1.2"><rect x="1.5" y="3" width="11" height="9" rx="1.5"/><path d="M1.5 4.5l5.5 3.5 5.5-3.5"/></svg> info@sameterezatmaca.com</a>
+        <a href="https://github.com/erezatmacaa-coder" target="_blank"><svg width="14" height="14" viewBox="0 0 14 14" fill="#c9a84c"><path d="M7 0C3.13 0 0 3.13 0 7c0 3.09 2.01 5.71 4.78 6.65.35.07.47-.16.47-.34 0-.17-.01-.62-.01-1.2-1.72.37-2.16-.49-2.3-.94-.07-.2-.37-.94-.76-1.13-.26-.15-.63-.52-.01-.53.59-.01 1.01.54 1.15.76.67 1.12 1.75.8 2.18.64.07-.51.27-.85.51-1.05-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.58.82-2.14-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.14 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.41.48.34A7.01 7.01 0 0014 7c0-3.87-3.13-7-7-7z"/></svg> @erezatmacaa-coder</a>
+        <a href="mailto:erez.atmaca@hotmail.com"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="#c9a84c" stroke-width="1.2"><rect x="1.5" y="3" width="11" height="9" rx="1.5"/><path d="M1.5 4.5l5.5 3.5 5.5-3.5"/></svg> erez.atmaca@hotmail.com</a>
+      </div></div>
+      <form class="contact-form" id="cf">
+        <input type="text" id="cf_name" data-i18n="form_name" placeholder="Adın" required class="cf-input">
+        <input type="email" id="cf_email" data-i18n="form_email" placeholder="E-posta" required class="cf-input">
+        <textarea id="cf_msg" data-i18n="form_msg" placeholder="Mesajın..." rows="4" required class="cf-input">
+        <button type="button" class="btn btn-primary" onclick="sendMail()" data-i18n="form_send">Gönder</button>
+        <div class="form-feedback" id="ff"></div>
+      </form>
+      <script>
+function sendMail(){
+  const n=document.getElementById('cf_name').value, e=document.getElementById('cf_email').value, m=document.getElementById('cf_msg').value;
+  if(!n||!e||!m) return;
+  const fb=document.getElementById('ff');
+  fb.className='form-feedback show success';
+  fb.textContent='E-posta istemciniz açılıyor...';
+  window.location.href='mailto:info@sameterezatmaca.com?subject='+encodeURIComponent('sameterezatmaca.com - '+n)+'&body='+encodeURIComponent('Gönderen: '+n+' ('+e+')\n\n'+m);
+}</script>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <p>&copy; 2026 Samet Erez Atmaca</p>
+  <p data-i18n="footer">Tüm hakları saklıdır.</p>
+</footer>
+
+<script>
+const t = {
+  tr:{nav_about:'Hakkımda',nav_skills:'Yetenekler',nav_projects:'Projeler',nav_contact:'İletişim',hero_tag:'AI Kaşifi',hero_desc:'Yapay zekayı keşfediyor, öğrendiklerimle projeler geliştiriyorum. Merakım beni ileri taşıyor.',hero_btn1:'Projeleri Gör',hero_btn2:'İletişime Geç',about_tag:'Hakkımda',about_title:'Merhaba, ben <span>Samet</span>',about_p1:'Yapay zeka alanına büyük bir ilgi duyuyorum. AI araçlarını kullanarak projeler geliştiriyor, her gün yeni şeyler öğreniyorum.',about_p2:'Yazılım konusunda yolun başındayım — temel düzeyde bilgim var. Ama AI sayesinde hayal ettiğim fikirleri gerçeğe dönüştürebiliyorum. Öğrenmeyi ve keşfetmeyi seviyorum.',skills_tag:'Yetenekler',skills_title:'Kullandığım <span>Teknolojiler</span>',skills_desc:'AI destekli öğrenme ile geliştirilen beceriler',sk_1_name:'Python',sk_1_lvl:'AI Destekli',sk_2_name:'HTML & CSS',sk_2_lvl:'Orta Düzey',sk_3_name:'JavaScript',sk_3_lvl:'Başlangıç',sk_4_name:'Prompt Engineering',sk_4_lvl:'İleri Düzey',sk_5_name:'Git & GitHub',sk_5_lvl:'Orta Düzey',sk_6_name:'Öğrenme & Merak',sk_6_lvl:'Sınır Yok',proj_tag:'Projeler',proj_title:'Yaptığım <span>Çalışmalar</span>',badge_done:'Tamamlandı',badge_wip:'Geliştiriliyor',badge_live:'Yayında',badge_plan:'Plan Aşaması',proj_1_desc:'Anlık CPU ve RAM kullanımını terminal üzerinden takip eden sistem aracı.',proj_2_desc:'8 yapay zeka ajanının birlikte çalışarak kod geliştirdiği multi-agent sistem.',proj_3_desc:'AI destekli çalışma asistanı. PDF yükle, AI ile özet ve quiz oluştur.',proj_4_desc:'Terminal üzerinde çalışan AI destekli kod asistanı.',proj_5_desc:"1000+ hazır AI promptu — kaydet, kategorize et, kopyala.",proj_6_desc:'Plan aşamasında olan yeni proje. Detaylar yakında.',source_link:'Kaynak Kod',coming_soon:'Yakında',contact_tag:'İletişim',contact_title:'Bana <span>Ulaşın</span>',form_name:'Adın',form_email:'E-posta',form_msg:'Mesajın...',form_send:'Gönder',form_ok:'Mesaj gönderildi ✓',form_err:'Hata oluştu, tekrar dene',footer:'Tüm hakları saklıdır.'},
+  en:{nav_about:'About',nav_skills:'Skills',nav_projects:'Projects',nav_contact:'Contact',hero_tag:'AI Explorer',hero_desc:"Exploring AI and building projects with what I learn. Curiosity keeps me moving forward.",hero_btn1:'View Projects',hero_btn2:'Get in Touch',about_tag:'About',about_title:"Hi, I'm <span>Samet</span>",about_p1:"I'm passionate about AI. I build projects using AI tools and learn something new every day.",about_p2:"I'm at the beginning of my coding journey — I have basic knowledge. But with AI, I can turn my ideas into reality. I love learning and exploring.",skills_tag:'Skills',skills_title:'Technologies <span>I Use</span>',skills_desc:'Skills developed through AI-assisted learning',sk_1_name:'Python',sk_1_lvl:'AI-Powered',sk_2_name:'HTML & CSS',sk_2_lvl:'Intermediate',sk_3_name:'JavaScript',sk_3_lvl:'Beginner',sk_4_name:'Prompt Engineering',sk_4_lvl:'Advanced',sk_5_name:'Git & GitHub',sk_5_lvl:'Intermediate',sk_6_name:'Learning & Curiosity',sk_6_lvl:'No Limits',proj_tag:'Projects',proj_title:'My <span>Work</span>',badge_done:'Completed',badge_wip:'In Development',badge_live:'Live',badge_plan:'Planned',proj_1_desc:'A system tool that monitors real-time CPU and RAM usage via terminal.',proj_2_desc:'A multi-agent system where 8 AI agents collaborate to develop code.',proj_3_desc:'AI-powered study assistant. Upload PDFs, generate summaries and quizzes.',proj_4_desc:'An AI-powered coding assistant that runs in your terminal.',proj_5_desc:'1000+ ready AI prompts — save, categorize, copy.',proj_6_desc:'A new project in planning phase. Details coming soon.',source_link:'Source Code',coming_soon:'Coming Soon',contact_tag:'Contact',contact_title:'Get <span>In Touch</span>',form_name:'Your Name',form_email:'Your Email',form_msg:'Your Message...',form_send:'Send',form_ok:'Message sent ✓',form_err:'Error, please try again',footer:'All rights reserved.'},
+  de:{nav_about:'Über mich',nav_skills:'Fähigkeiten',nav_projects:'Projekte',nav_contact:'Kontakt',hero_tag:'KI-Entdecker',hero_desc:'Ich erkunde KI und entwickle Projekte mit dem, was ich lerne. Neugier treibt mich voran.',hero_btn1:'Projekte ansehen',hero_btn2:'Kontakt',about_tag:'Über mich',about_title:'Hallo, ich bin <span>Samet</span>',about_p1:'Ich interessiere mich sehr für KI. Mit KI-Tools entwickle ich Projekte und lerne jeden Tag etwas Neues.',about_p2:'Ich stehe am Anfang meiner Coding-Reise — ich habe Grundkenntnisse. Aber mit KI kann ich meine Ideen verwirklichen. Ich liebe es zu lernen.',skills_tag:'Fähigkeiten',skills_title:'Technologien <span>die ich nutze</span>',skills_desc:'Durch KI-gestütztes Lernen entwickelte Fähigkeiten',sk_1_name:'Python',sk_1_lvl:'KI-gestützt',sk_2_name:'HTML & CSS',sk_2_lvl:'Mittelstufe',sk_3_name:'JavaScript',sk_3_lvl:'Anfänger',sk_4_name:'Prompt Engineering',sk_4_lvl:'Fortgeschritten',sk_5_name:'Git & GitHub',sk_5_lvl:'Mittelstufe',sk_6_name:'Lernen & Neugier',sk_6_lvl:'Unbegrenzt',proj_tag:'Projekte',proj_title:'Meine <span>Arbeit</span>',badge_done:'Abgeschlossen',badge_wip:'In Entwicklung',badge_live:'Live',badge_plan:'Geplant',proj_1_desc:'Ein Systemtool zur Echtzeit-Überwachung von CPU und RAM im Terminal.',proj_2_desc:'Ein Multi-Agent-System mit 8 KI-Agenten zur gemeinsamen Codeentwicklung.',proj_3_desc:'KI-gestützter Lernassistent. PDFs hochladen, Zusammenfassungen und Quiz erstellen.',proj_4_desc:'Ein KI-gestützter Code-Assistent für das Terminal.',proj_5_desc:'1000+ fertige KI-Prompts — speichern, kategorisieren, kopieren.',proj_6_desc:'Ein neues Projekt in der Planungsphase. Details folgen.',source_link:'Quellcode',coming_soon:'Demnächst',contact_tag:'Kontakt',contact_title:'Nimm <span>Kontakt auf</span>',form_name:'Dein Name',form_email:'Deine E-Mail',form_msg:'Deine Nachricht...',form_send:'Senden',form_ok:'Nachricht gesendet ✓',form_err:'Fehler, bitte erneut versuchen',footer:'Alle Rechte vorbehalten.'},
+  fr:{nav_about:'À propos',nav_skills:'Compétences',nav_projects:'Projets',nav_contact:'Contact',hero_tag:'Explorateur IA',hero_desc:"J'explore l'IA et crée des projets avec ce que j'apprends. La curiosité me fait avancer.",hero_btn1:'Voir les projets',hero_btn2:'Me contacter',about_tag:'À propos',about_title:'Bonjour, je suis <span>Samet</span>',about_p1:"Je suis passionné par l'IA. J'utilise des outils d'IA pour développer des projets et j'apprends chaque jour.",about_p2:"Je débute en programmation — j'ai des connaissances de base. Mais avec l'IA, je peux concrétiser mes idées. J'adore apprendre.",skills_tag:'Compétences',skills_title:'Technologies <span>que j\'utilise</span>',skills_desc:'Compétences développées avec l\'apprentissage assisté par IA',sk_1_name:'Python',sk_1_lvl:'Avec IA',sk_2_name:'HTML & CSS',sk_2_lvl:'Intermédiaire',sk_3_name:'JavaScript',sk_3_lvl:'Débutant',sk_4_name:'Prompt Engineering',sk_4_lvl:'Avancé',sk_5_name:'Git & GitHub',sk_5_lvl:'Intermédiaire',sk_6_name:'Apprentissage & Curiosité',sk_6_lvl:'Illimité',proj_tag:'Projets',proj_title:'Mes <span>réalisations</span>',badge_done:'Terminé',badge_wip:'En développement',badge_live:'En ligne',badge_plan:'Prévu',proj_1_desc:'Un outil système pour surveiller CPU et RAM en temps réel via le terminal.',proj_2_desc:'Un système multi-agents où 8 IA collaborent pour développer du code.',proj_3_desc:'Assistant d\'étude IA. Importez des PDF, générez résumés et quiz.',proj_4_desc:'Un assistant de codage IA qui fonctionne dans votre terminal.',proj_5_desc:'1000+ prompts IA prêts à l\'emploi — sauvegardez, catégorisez, copiez.',proj_6_desc:'Nouveau projet en phase de planification. Détails à venir.',source_link:'Code source',coming_soon:'Bientôt',contact_tag:'Contact',contact_title:'Entrez <span>en contact</span>',form_name:'Votre nom',form_email:'Votre email',form_msg:'Votre message...',form_send:'Envoyer',form_ok:'Message envoyé ✓',form_err:'Erreur, réessayez',footer:'Tous droits réservés.'},
+  es:{nav_about:'Sobre mí',nav_skills:'Habilidades',nav_projects:'Proyectos',nav_contact:'Contacto',hero_tag:'Explorador de IA',hero_desc:'Explorando la IA y construyendo proyectos con lo que aprendo. La curiosidad me impulsa.',hero_btn1:'Ver proyectos',hero_btn2:'Contactar',about_tag:'Sobre mí',about_title:'Hola, soy <span>Samet</span>',about_p1:'Me apasiona la IA. Utilizo herramientas de IA para desarrollar proyectos y aprendo algo nuevo cada día.',about_p2:'Estoy al principio de mi camino en programación — tengo conocimientos básicos. Pero con la IA puedo convertir mis ideas en realidad. Amo aprender.',skills_tag:'Habilidades',skills_title:'Tecnologías <span>que uso</span>',skills_desc:'Habilidades desarrolladas con aprendizaje asistido por IA',sk_1_name:'Python',sk_1_lvl:'Con IA',sk_2_name:'HTML & CSS',sk_2_lvl:'Intermedio',sk_3_name:'JavaScript',sk_3_lvl:'Principiante',sk_4_name:'Prompt Engineering',sk_4_lvl:'Avanzado',sk_5_name:'Git & GitHub',sk_5_lvl:'Intermedio',sk_6_name:'Aprendizaje & Curiosidad',sk_6_lvl:'Sin Límites',proj_tag:'Proyectos',proj_title:'Mi <span>trabajo</span>',badge_done:'Completado',badge_wip:'En desarrollo',badge_live:'En vivo',badge_plan:'Planificado',proj_1_desc:'Una herramienta que monitorea CPU y RAM en tiempo real desde la terminal.',proj_2_desc:'Un sistema multi-agente donde 8 IA colaboran para desarrollar código.',proj_3_desc:'Asistente de estudio con IA. Sube PDFs, genera resúmenes y cuestionarios.',proj_4_desc:'Un asistente de codificación con IA que funciona en tu terminal.',proj_5_desc:'1000+ prompts de IA listos — guarda, categoriza, copia.',proj_6_desc:'Nuevo proyecto en fase de planificación. Detalles próximamente.',source_link:'Código fuente',coming_soon:'Próximamente',contact_tag:'Contacto',contact_title:'Ponte <span>en contacto</span>',form_name:'Tu nombre',form_email:'Tu email',form_msg:'Tu mensaje...',form_send:'Enviar',form_ok:'Mensaje enviado ✓',form_err:'Error, inténtalo de nuevo',footer:'Todos los derechos reservados.'}
+};
+
+function setLang(l) {
+  document.documentElement.setAttribute('data-lang', l);
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const k = el.dataset.i18n;
+    if (t[l] && t[l][k]) {
+      if (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA') el.placeholder = t[l][k];
+      else if (el.hasChildNodes() && el.children.length > 0) el.innerHTML = t[l][k];
+      else el.textContent = t[l][k];
+    }
+  });
+  document.getElementById('langSelect').value = l;
+  localStorage.setItem('lang', l);
+}
+
+const saved = localStorage.getItem('lang') || 'tr';
+setLang(saved);
+document.getElementById('langSelect').addEventListener('change', e => setLang(e.target.value));
+
+try {
+gsap.registerPlugin(ScrollTrigger);
+gsap.from('.hero-title .line:nth-child(1) span', { duration: 1, yPercent: 100, ease: 'power4.out', delay: 0.15 });
+gsap.from('.hero-title .line:nth-child(2) span', { duration: 1, yPercent: 100, ease: 'power4.out', delay: 0.35 });
+gsap.from('.hero-tag', { duration: 0.6, y: 15, opacity: 0, ease: 'power4.out', delay: 0.1 });
+gsap.from('.hero-desc', { duration: 0.6, y: 20, opacity: 0, ease: 'power4.out', delay: 0.55 });
+gsap.from('.hero-actions', { duration: 0.6, y: 20, opacity: 0, ease: 'power4.out', delay: 0.75 });
+gsap.from('.hero-visual', { duration: 1, scale: 0.75, opacity: 0, ease: 'back.out(1.7)', delay: 0.45 });
+gsap.from('.about-text', { scrollTrigger: { trigger: '#about', start: 'top 80%' }, duration: 1, x: -50, opacity: 0, ease: 'power4.out' });
+gsap.from('.sk-item', { scrollTrigger: { trigger: '#skills', start: 'top 75%' }, duration: 0.7, y: 15, opacity: 0, stagger: 0.06, ease: 'power4.out' });
+document.querySelectorAll('.sk-item').forEach(row => {
+  ScrollTrigger.create({
+    trigger: row, start: 'top 80%',
+    onEnter: () => { const b = row.querySelector('.sk-fill'); if (b) setTimeout(() => b.style.width = b.dataset.w + '%', 200); },
+    once: true
+  });
+});
+gsap.from('.proj', { scrollTrigger: { trigger: '#projects', start: 'top 70%' }, duration: 0.7, y: 20, opacity: 0, stagger: 0.05, ease: 'power4.out' });
+gsap.from('.contact-info, .contact-form', { scrollTrigger: { trigger: '#contact', start: 'top 70%' }, duration: 0.8, y: 20, opacity: 0, stagger: 0.1, ease: 'power4.out' });
+} catch(e) {}
+
+document.querySelectorAll('.sk-fill').forEach(b => { if (b.dataset.w) b.style.width = b.dataset.w + '%'; });
+window.addEventListener('scroll', () => {
+  const d = document.documentElement;
+  document.getElementById('progress').style.width = ((d.scrollTop || document.body.scrollTop) / (d.scrollHeight - d.clientHeight) * 100) + '%';
+  document.querySelector('nav').classList.toggle('scrolled', window.scrollY > 50);
+});
+</script>
+</body>
+</html>
