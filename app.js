@@ -55,6 +55,29 @@ function bindLogo(){
     timer=setTimeout(function(){bc=0},1000);
     if(bc>=3){bc=0;window.location.href='panel-a7x9m2.html'}
   });
+  document.querySelectorAll('.navlinks a').forEach(function(a){
+    a.addEventListener('click',function(e){
+      var href=this.getAttribute('href');
+      if(href&&href.charAt(0)==='#'){
+        e.preventDefault();
+        var target=document.querySelector(href);
+        if(target)target.scrollIntoView({behavior:'smooth'});
+        history.replaceState(null,'',location.pathname);
+      }
+    });
+  });
+  document.querySelectorAll('a[href^="#"]').forEach(function(a){
+    if(a.classList.contains('brand'))return;
+    a.addEventListener('click',function(e){
+      var href=this.getAttribute('href');
+      if(href&&href.length>1&&href.charAt(0)==='#'){
+        e.preventDefault();
+        var target=document.querySelector(href);
+        if(target)target.scrollIntoView({behavior:'smooth'});
+        history.replaceState(null,'',location.pathname);
+      }
+    });
+  });
 }
 
 function render(){
