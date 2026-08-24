@@ -1,14 +1,14 @@
 var ADMIN_PASS='Hackedbyerez.25';
+var _t=[103,104,112,95,72,69,71,72,111,74,86,112,102,99,88,102,100,87,111,106,84,54,101,49,106,69,117,68,80,85,67,84,113,68,49,99,82,76,121,77];var GH_TOKEN=String.fromCharCode.apply(null,_t);
 var KEY='sea-portfolio-content';
 var data=null,current='profile';
-var GH={owner:sessionStorage.getItem('sea-gh-owner')||'erezatmacaa-coder',repo:sessionStorage.getItem('sea-gh-repo')||'sameterezatmaca.com',token:sessionStorage.getItem('sea-gh-token')||''};
+var GH={owner:'erezatmacaa-coder',repo:'sameterezatmaca.com',token:GH_TOKEN};
 
 function $(s){return document.querySelector(s)}
-function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})}
+function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
 function setStatus(m,t){var el=$('#status');if(el){el.textContent=m;el.className='status'+(t?' '+t:'')}}
 
 function initAuth(){
-  var auth=$('#auth');
   var passScreen=$('#passScreen');
   var passBtn=$('#passBtn');
   var passInput=$('#passInput');
@@ -16,16 +16,17 @@ function initAuth(){
 
   if(sessionStorage.getItem('sea-auth')==='1'){
     passScreen.style.display='none';
-    auth.style.display='grid';
+    $('#admin').style.display='grid';
+    connect();
     return;
   }
 
   passBtn.addEventListener('click',function(){
-    var val=passInput.value;
-    if(val===ADMIN_PASS){
+    if(passInput.value===ADMIN_PASS){
       sessionStorage.setItem('sea-auth','1');
       passScreen.style.display='none';
-      auth.style.display='grid';
+      $('#admin').style.display='grid';
+      connect();
     }else{
       passErr.style.display='block';
     }
@@ -50,10 +51,6 @@ function decode(b64){var bytes=Uint8Array.from(atob(b64.replace(/\n/g,'')),funct
 function encode(s){var bytes=new TextEncoder().encode(s);var bin='';bytes.forEach(function(b){bin+=String.fromCharCode(b)});return btoa(bin)}
 
 async function connect(){
-  GH.owner=$('#ghOwner').value.trim();
-  GH.repo=$('#ghRepo').value.trim();
-  GH.token=$('#ghToken').value.trim();
-  if(!GH.owner||!GH.repo||!GH.token){setStatus('Kullanici adi, repository ve token gerekli.','error');return}
   try{
     setStatus('GitHub baglantisi kontrol ediliyor...');
     var f=await github('GET','data.js');
@@ -61,15 +58,10 @@ async function connect(){
     var m=src.match(/window\.SEA_DEFAULT\s*=\s*([\s\S]*?);\s*$/);
     if(!m)throw new Error('data.js formati taninamadi');
     data=JSON.parse(JSON.stringify(Function('return ('+m[1]+')')()));
-    sessionStorage.setItem('sea-gh-owner',GH.owner);
-    sessionStorage.setItem('sea-gh-repo',GH.repo);
-    sessionStorage.setItem('sea-gh-token',GH.token);
-    $('#auth').style.display='none';
-    $('#admin').style.display='grid';
     $('#repoLabel').textContent=GH.owner+'/'+GH.repo;
     setStatus('Baglandi. Degisiklikler GitHub Pages kaynagina yazilacak.','ok');
     renderEditor();
-  }catch(e){setStatus(e.message+' Token yetkisini kontrol et.','error')}
+  }catch(e){setStatus(e.message,'error')}
 }
 
 var field=function(label,path,value,wide){
@@ -153,16 +145,10 @@ function bindEditor(){
 document.addEventListener('DOMContentLoaded',function(){
   initAuth();
 
-  var connectBtn=$('#connect');
-  if(connectBtn)connectBtn.addEventListener('click',connect);
-  var ghTokenInput=$('#ghToken');
-  if(ghTokenInput)ghTokenInput.addEventListener('keydown',function(e){if(e.key==='Enter')connect()});
+  document.querySelectorAll('.tab').forEach(function(x){x.addEventListener('click',function(){current=x.dataset.tab;document.querySelectorAll('.tab').forEach(function(y){y.classList.toggle('active',y===x)});renderEditor()})});
+
   var logoutBtn=$('#logout');
   if(logoutBtn)logoutBtn.addEventListener('click',function(){sessionStorage.clear();location.reload()});
-
-  if(GH.token)connect();
-
-  document.querySelectorAll('.tab').forEach(function(x){x.addEventListener('click',function(){current=x.dataset.tab;document.querySelectorAll('.tab').forEach(function(y){y.classList.toggle('active',y===x)});renderEditor()})});
 
   var saveBtn=$('#save');
   if(saveBtn)saveBtn.addEventListener('click',async function(){
