@@ -1,0 +1,39 @@
+name: Simplify web services CTA
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Update web services page
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p=Path('web-siteleri.html')
+          s=p.read_text(encoding='utf-8')
+          css='''\n.service-cta{margin-top:48px;display:flex;justify-content:flex-start}.service-cta a{display:inline-flex;align-items:center;gap:18px;background:#111;color:#fff;padding:15px 20px;border-radius:999px;font-size:12px;font-weight:800}.service-cta a:hover{transform:translateY(-2px)}\n'''
+          if '.service-cta{' not in s:
+              s=s.replace('</style>',css+'</style>',1)
+          # Remove any per-service links/buttons while preserving service descriptions.
+          import re
+          s=re.sub(r'<a[^>]*class="[^"]*service[^" ]*link[^"]*"[^>]*>.*?</a>','',s,flags=re.S)
+          marker='</div></section><section><div class="eyebrow">02 / NASIL ÇALIŞIYORUM</div>'
+          cta='<div class="service-cta"><a href="#contact">Hizmetleri ve süreci incele <span>→</span></a></div></section><section><div class="eyebrow">02 / NASIL ÇALIŞIYORUM</div>'
+          if 'Hizmetleri ve süreci incele' not in s and marker in s:
+              s=s.replace(marker, '</div>'+cta,1)
+          p.write_text(s,encoding='utf-8')
+          PY
+      - name: Commit
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add web-siteleri.html
+          if git diff --cached --quiet; then echo "No changes"; else git commit -m "Use one services CTA"; git push; fi
