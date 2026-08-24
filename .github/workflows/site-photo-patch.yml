@@ -21,18 +21,19 @@ jobs:
           p = Path('index.html')
           s = p.read_text(encoding='utf-8')
 
-          css = '''\n.profile-photo-wrap{margin-top:34px;display:flex;align-items:center;gap:22px}.profile-photo{width:92px;height:92px;object-fit:cover;border-radius:50%;border:1px solid #2b2b2b;filter:grayscale(8%);box-shadow:0 12px 30px rgba(0,0,0,.18)}.profile-photo-copy{display:flex;flex-direction:column;gap:5px}.profile-photo-copy strong{font-size:16px;color:#fff}.profile-photo-copy span{font-size:10px;color:#777;letter-spacing:1.2px} .contact-emails{display:flex;flex-direction:column;gap:10px;align-items:flex-end}.contact-emails a{font-size:clamp(17px,2vw,25px);font-weight:700;border-bottom:1px solid #111;padding-bottom:6px} @media(max-width:850px){.contact-emails{align-items:flex-start}}\n'''
-          if 'profile-photo-wrap' not in s:
+          css = '''\n.profile-photo-wrap{margin-top:34px;display:flex;align-items:center;gap:22px}.profile-photo{width:92px;height:92px;object-fit:cover;border-radius:50%;border:1px solid #2b2b2b;filter:grayscale(8%);box-shadow:0 12px 30px rgba(0,0,0,.18)}.profile-photo-copy{display:flex;flex-direction:column;gap:5px}.profile-photo-copy strong{font-size:16px;color:#fff}.profile-photo-copy span{font-size:10px;color:#777;letter-spacing:1.2px}.contact-emails{display:flex;flex-direction:column;gap:10px;align-items:flex-end}.contact-emails a{font-size:clamp(17px,2vw,25px);font-weight:700;border-bottom:1px solid #111;padding-bottom:6px}@media(max-width:850px){.contact-emails{align-items:flex-start}}\n'''
+          if '.profile-photo-wrap{' not in s:
               s = s.replace('</style>', css + '</style>', 1)
 
           anchor = '<div class="about-right"><p>'
-          if 'profile-photo-wrap' not in s:
-              block = '<div class="profile-photo-wrap"><img class="profile-photo" src="photo.jpg" alt="Samet Erez Atmaca"><div class="profile-photo-copy"><strong>Samet Erez Atmaca</strong><span>DEVELOPER / PRODUCT BUILDER</span></div></div>'
+          block = '<div class="profile-photo-wrap"><img class="profile-photo" src="photo.jpg" alt="Samet Erez Atmaca"><div class="profile-photo-copy"><strong>Samet Erez Atmaca</strong><span>DEVELOPER / PRODUCT BUILDER</span></div></div>'
+          if 'src="photo.jpg"' not in s:
               s = s.replace(anchor, block + anchor, 1)
 
           old = '<a class="email-link magnetic" href="mailto:info@sameterezatmaca.com">info@sameterezatmaca.com ↗</a>'
           new = '<div class="contact-emails"><a class="email-link magnetic" href="mailto:info@sameterezatmaca.com">info@sameterezatmaca.com ↗</a><a class="email-link magnetic" href="mailto:erez.atmaca@hotmail.com">erez.atmaca@hotmail.com ↗</a></div>'
-          s = s.replace(old, new, 1)
+          if 'erez.atmaca@hotmail.com' not in s:
+              s = s.replace(old, new, 1)
 
           s = s.replace('<h3>Locamo.</h3>', '<h3>Locamo</h3>')
           s = s.replace('<h3>Personal Brand.</h3>', '<h3>Personal Brand</h3>')
