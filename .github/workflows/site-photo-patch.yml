@@ -1,0 +1,55 @@
+name: Apply Site Photo Patch
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  patch-site:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Patch homepage
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p = Path('index.html')
+          s = p.read_text(encoding='utf-8')
+
+          css = '''\n.profile-photo-wrap{margin-top:34px;display:flex;align-items:center;gap:22px}.profile-photo{width:92px;height:92px;object-fit:cover;border-radius:50%;border:1px solid #2b2b2b;filter:grayscale(8%);box-shadow:0 12px 30px rgba(0,0,0,.18)}.profile-photo-copy{display:flex;flex-direction:column;gap:5px}.profile-photo-copy strong{font-size:16px;color:#fff}.profile-photo-copy span{font-size:10px;color:#777;letter-spacing:1.2px} .contact-emails{display:flex;flex-direction:column;gap:10px;align-items:flex-end}.contact-emails a{font-size:clamp(17px,2vw,25px);font-weight:700;border-bottom:1px solid #111;padding-bottom:6px} @media(max-width:850px){.contact-emails{align-items:flex-start}}\n'''
+          if 'profile-photo-wrap' not in s:
+              s = s.replace('</style>', css + '</style>', 1)
+
+          anchor = '<div class="about-right"><p>'
+          if 'profile-photo-wrap' not in s:
+              block = '<div class="profile-photo-wrap"><img class="profile-photo" src="photo.jpg" alt="Samet Erez Atmaca"><div class="profile-photo-copy"><strong>Samet Erez Atmaca</strong><span>DEVELOPER / PRODUCT BUILDER</span></div></div>'
+              s = s.replace(anchor, block + anchor, 1)
+
+          old = '<a class="email-link magnetic" href="mailto:info@sameterezatmaca.com">info@sameterezatmaca.com ↗</a>'
+          new = '<div class="contact-emails"><a class="email-link magnetic" href="mailto:info@sameterezatmaca.com">info@sameterezatmaca.com ↗</a><a class="email-link magnetic" href="mailto:erez.atmaca@hotmail.com">erez.atmaca@hotmail.com ↗</a></div>'
+          s = s.replace(old, new, 1)
+
+          s = s.replace('<h3>Locamo.</h3>', '<h3>Locamo</h3>')
+          s = s.replace('<h3>Personal Brand.</h3>', '<h3>Personal Brand</h3>')
+          s = s.replace('<h3>Digital Lab.</h3>', '<h3>Digital Lab</h3>')
+          s = s.replace('<h3>Locamo.<br>', '<h3>Locamo<br>')
+
+          p.write_text(s, encoding='utf-8')
+          PY
+
+      - name: Commit changes
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html
+          if git diff --cached --quiet; then
+            echo "No changes to commit"
+          else
+            git commit -m "Add profile photo and contact emails"
+            git push
+          fi
