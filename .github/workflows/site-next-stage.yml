@@ -1,0 +1,50 @@
+name: Apply portfolio architecture
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Refine homepage architecture
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import re
+          p = Path('app.js')
+          s = p.read_text(encoding='utf-8')
+
+          # Clean product route
+          s = s.replace("mova.html", "mova/")
+          s = s.replace("locamo.html", "mova/")
+
+          # Make navigation reflect the new positioning.
+          s = re.sub(
+              r'<div class="navlinks">.*?</div>',
+              '<div class="navlinks"><a class="active" href="#top">Ana Sayfa</a><a href="#products">Ürünler</a><a href="#web-work">Web Çalışmaları</a><a href="#about">Hakkımda</a><a href="#skills">Yetenekler</a><a href="#contact">İletişim</a></div>',
+              s,
+              count=1,
+              flags=re.S,
+          )
+
+          direction = '''<section id="products" class="wrap reveal" style="padding:110px 0 55px;border-top:1px solid rgba(255,255,255,.08)"><div style="display:flex;justify-content:space-between;gap:40px;align-items:end;margin-bottom:35px"><div><span class="kicker">ÜRETİM ALANLARIM</span><h2 style="font-size:clamp(42px,6vw,78px);line-height:.9;letter-spacing:-.07em;margin-top:12px">Ürün geliştiriyor,<br><em style="font-family:Georgia,serif;font-weight:400">web deneyimleri</em> kuruyorum</h2></div><p style="max-width:360px;color:#777;line-height:1.7;font-size:13px">Mova gibi kendi ürün fikirlerimi ayrı bir yerde büyütüyor, aynı zamanda markalar için profesyonel web deneyimleri tasarlayıp geliştiriyorum.</p></div><div style="display:grid;grid-template-columns:1fr 1fr;gap:14px"><a href="mova/" style="display:block;padding:34px;border:1px solid rgba(255,255,255,.12);border-radius:24px;background:linear-gradient(145deg,#111,#0a0a0a);color:#fff;min-height:230px"><small style="display:block;color:#666;letter-spacing:2px;font-size:9px;margin-bottom:25px">01 / ÜRÜN</small><strong style="display:block;font-size:35px;letter-spacing:-.06em">Mova</strong><p style="color:#969696;max-width:430px;font-size:13px;line-height:1.7;margin-top:10px">Konum, keşif ve topluluğu bir araya getiren mobil ürün projesi.</p><span style="display:inline-block;margin-top:25px;font-size:11px;font-weight:800">ÜRÜNÜ İNCELE →</span></a><a id="web-work" href="web-siteleri.html" style="display:block;padding:34px;border:1px solid #d8d5cd;border-radius:24px;background:#f3f2ee;color:#111;min-height:230px"><small style="display:block;color:#999;letter-spacing:2px;font-size:9px;margin-bottom:25px">02 / WEB</small><strong style="display:block;font-size:35px;letter-spacing:-.06em">Web Siteleri</strong><p style="color:#777;max-width:430px;font-size:13px;line-height:1.7;margin-top:10px">Kurumsal, kişisel ve özel web projeleri için tasarım ve geliştirme.</p><span style="display:inline-block;margin-top:25px;font-size:11px;font-weight:800">WEB ÇALIŞMALARINI İNCELE →</span></a></div></section>'''
+
+          if 'id="products" class="wrap reveal"' not in s:
+              s = s.replace('<section class="work wrap reveal">', direction + '<section class="work wrap reveal">', 1)
+
+          s = s.replace('NELER YAPIYORUM?', 'SEÇİLİ ÇALIŞMALAR', 1)
+          p.write_text(s, encoding='utf-8')
+          PY
+      - name: Commit changes
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add app.js
+          if git diff --cached --quiet; then echo "No changes"; else git commit -m "Refine product and web portfolio sections"; git push; fi
