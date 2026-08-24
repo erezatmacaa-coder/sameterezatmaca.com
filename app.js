@@ -10,7 +10,7 @@ let prevMarkets={};
 async function fetchMarkets(){
   try{const r=await fetch('https://api.binance.com/api/v3/ticker/24hr?symbol=BTCUSDT');const t=await r.json();const p=parseFloat(t.lastPrice);const c=parseFloat(t.priceChangePercent);prevMarkets.btc={price:markets[3][1],change:markets[3][2]};markets[3]=['BTC/USDT',p.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2}),(c>=0?'+':'')+c.toFixed(2)+'%',c>=0?'up':'down']}catch(e){}
   try{const r=await fetch('https://api.binance.com/api/v3/ticker/24hr?symbol=PAXGUSDT');const t=await r.json();const p=parseFloat(t.lastPrice);const c=parseFloat(t.priceChangePercent);prevMarkets.gold={price:markets[2][1],change:markets[2][2]};markets[2]=['XAU/USD',p.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2}),(c>=0?'+':'')+c.toFixed(2)+'%',c>=0?'up':'down']}catch(e){}
-  try{const r=await fetch('https://api.exchangerate-api.com/v4/latest/USD');const j=await r.json();if(j&&j.rates){prevMarkets.usd={price:markets[0][1]};markets[0]=['USD/TRY',j.rates.TRY.toFixed(2),'+0.00%','up'];prevMarkets.eur={price:markets[1][1]};markets[1]=['EUR/TRY',(j.rates.EUR*j.rates.TRY).toFixed(2),'+0.00%','up']}}catch(e){}
+  try{const r=await fetch('https://api.exchangerate-api.com/v4/latest/USD');const j=await r.json();if(j&&j.rates){prevMarkets.usd={price:markets[0][1]};markets[0]=['USD/TRY',j.rates.TRY.toFixed(2),'+0.00%','up'];prevMarkets.eur={price:markets[1][1]};markets[1]=['EUR/TRY',(j.rates.TRY/j.rates.EUR).toFixed(2),'+0.00%','up']}}catch(e){}
   updateMarketUI();
 }
 
