@@ -1,0 +1,1 @@
+window.SEA_ADMIN_CONFIG={enabled:true,provider:'external-backend',note:'GitHub Pages is static. Use a serverless/backend provider for real authentication and persistent shared content.'};
