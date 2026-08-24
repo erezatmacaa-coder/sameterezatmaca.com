@@ -1,6 +1,6 @@
 window.SEA_DEFAULT = {
   profile: {
-    name: 'Samet Erez Atmaca', initials: 'SEA', role: { tr: 'Yazılım Geliştirici', en: 'Software Developer' },
+    name: 'Samet Erez Atmaca', initials: '<SE/>', role: { tr: 'Yazılım Geliştirici', en: 'Software Developer' },
     intro: { tr: 'Modern teknolojilerle dijital dünyada fark yaratan projeler geliştiriyorum.', en: 'I build projects that create impact with modern technologies.' },
     photo: './photo.jpg', logo: './logo.png', github: 'erezatmacaa-coder',
     email: 'info@sameterezatmaca.com', alternateEmail: 'erez.atmaca@hotmail.com'
