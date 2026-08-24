@@ -37,6 +37,9 @@ body.light .project:hover{border-color:#7a9e07;box-shadow:0 15px 35px rgba(0,0,0
 body.light .project h3{color:#111}
 body.light .project p{color:#666}
 body.light .project-no{border-color:#ccc;color:#777}
+body.light .project-add{border-color:#ccc;background:rgba(255,255,255,.8);color:#555}
+body.light .project-add:hover{background:#5a8a00;color:#fff;border-color:#5a8a00}
+body.light .project-icon{color:#5a8a07;text-shadow:0 0 20px rgba(90,138,7,.2)}
 body.light .tech-strip{background:#fff;border-color:#ddd}
 body.light .tech-strip span{color:#555}
 body.light .market-chart,.body.light .about-card{background:#fff;border-color:#ddd}
@@ -44,11 +47,13 @@ body.light .panel-title{color:#5a8a00}
 body.light .chart-wrap .grid line{stroke:#eee}
 body.light .axis span{color:#aaa}
 body.light .periods span{color:#aaa}
-body.light .about-card p{color:#555}
+body.light .about-card p{color:#444}
 body.light .about-card p b{color:#111}
-body.light .about-card img{border-color:#ddd}
+body.light .about-card img{border-color:#ccc}
 body.light .pills span{border-color:#ddd;color:#555}
 body.light .about-card a{color:#5a8a00}
+body.light .about-meta{color:#666}
+body.light .market-foot{color:#555;border-color:#eee}
 body.light .contact{background:#f0f0ec;border-color:#ddd}
 body.light .footer-grid{background:#f8f8f6}
 body.light .footer-grid>div{border-color:#e0e0e0;color:#555}
