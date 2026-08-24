@@ -1,4 +1,4 @@
-﻿const fallback=window.SEA_DEFAULT||{};
+const fallback=window.SEA_DEFAULT||{};
 function getData(){try{const raw=localStorage.getItem('sea-portfolio-content');if(!raw)return fallback;const saved=JSON.parse(raw);return{...fallback,...saved,profile:{...fallback.profile,...saved.profile},about:{...fallback.about,...saved.about},stats:Array.isArray(saved.stats)?saved.stats:fallback.stats,skills:Array.isArray(saved.skills)?saved.skills:fallback.skills,timeline:Array.isArray(saved.timeline)?saved.timeline:fallback.timeline,projects:Array.isArray(saved.projects)?saved.projects:fallback.projects}}catch{return fallback}}
 const lang=()=>localStorage.getItem('sea-portfolio-lang')||'tr';
 const t=(v,l)=>v&&typeof v==='object'?(v[l]??v.tr??v.en??''):v??'';
