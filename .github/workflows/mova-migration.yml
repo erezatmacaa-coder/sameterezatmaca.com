@@ -1,0 +1,51 @@
+name: Rename Locamo to Mova
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  rename:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Rename project references
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          targets = [Path('index.html'), Path('app.js')]
+          changed = []
+          for p in targets:
+              if not p.exists():
+                  continue
+              s = p.read_text(encoding='utf-8')
+              old = s
+              s = s.replace('locamo.html', 'mova.html')
+              s = s.replace('locamo', 'mova')
+              s = s.replace('LOCAMO', 'MOVA')
+              s = s.replace('Locamo', 'Mova')
+              if s != old:
+                  p.write_text(s, encoding='utf-8')
+                  changed.append(str(p))
+          # Keep the old URL from becoming a dead end when someone has an old bookmark.
+          old_page = Path('locamo.html')
+          if old_page.exists():
+              old_page.write_text('''<!doctype html><html lang="tr"><head><meta charset="utf-8"><meta http-equiv="refresh" content="0;url=mova.html"><link rel="canonical" href="mova.html"><title>Mova</title></head><body><a href="mova.html">Mova</a></body></html>''', encoding='utf-8')
+              changed.append('locamo.html')
+          print('Updated:', ', '.join(changed) if changed else 'none')
+          PY
+      - name: Commit migration
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html app.js locamo.html
+          if git diff --cached --quiet; then
+            echo "No changes"
+          else
+            git commit -m "Rename Locamo project to Mova"
+            git push
+          fi
