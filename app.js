@@ -7,8 +7,24 @@ const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&
 let markets=[['USD/TRY','41.23','+0.42%','up'],['EUR/TRY','48.17','+0.18%','up'],['XAU/USD','2,357.64','-0.31%','down'],['BTC/USDT','66,842.00','+1.21%','up']];
 
 async function fetchMarkets(){
-  try{const btc=await fetch('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usdt&include_24hr_change=true').then(r=>r.json());const btcPrice=btc.bitcoin.usdt.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});const btcChange=btc.bitcoin.usdt_24h_change;const btcDir=btcChange>=0?'up':'down';markets[3]=['BTC/USDT',btcPrice,(btcChange>=0?'+':'')+btcChange.toFixed(2)+'%',btcDir]}catch(e){}
-  try{const fx=await fetch('https://api.exchangerate-api.com/v4/latest/USD').then(r=>r.json());const tryRate=fx.rates.TRY;if(tryRate){const usdPrice=tryRate.toFixed(2);markets[0]=['USD/TRY',usdPrice,'+0.00%','up'];const eurUsd=fx.rates.EUR;const eurTry=(eurUsd*tryRate).toFixed(2);markets[1]=['EUR/TRY',eurTry,'+0.00%','up']}}catch(e){}
+  try{
+    const[ticker,paxg,fx]=await Promise.all([
+      fetch('https://api.binance.com/api/v3/ticker/24hr?symbol=BTCUSDT').then(r=>r.json()),
+      fetch('https://api.binance.com/api/v3/ticker/24hr?symbol=PAXGUSDT').then(r=>r.json()),
+      fetch('https://api.exchangerate-api.com/v4/latest/USD').then(r=>r.json())
+    ]);
+    const btcPrice=parseFloat(ticker.lastPrice).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});
+    const btcChange=parseFloat(ticker.priceChangePercent);
+    markets[3]=['BTC/USDT',btcPrice,(btcChange>=0?'+':'')+btcChange.toFixed(2)+'%',btcChange>=0?'up':'down'];
+    const goldPrice=parseFloat(paxg.lastPrice).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});
+    const goldChange=parseFloat(paxg.priceChangePercent);
+    markets[2]=['XAU/USD',goldPrice,(goldChange>=0?'+':'')+goldChange.toFixed(2)+'%',goldChange>=0?'up':'down'];
+    if(fx&&fx.rates){
+      markets[0]=['USD/TRY',fx.rates.TRY.toFixed(2),'+0.00%','up'];
+      const eurTry=(fx.rates.EUR*fx.rates.TRY).toFixed(2);
+      markets[1]=['EUR/TRY',eurTry,'+0.00%','up'];
+    }
+  }catch(e){}
   updateMarketUI();
 }
 
@@ -30,13 +46,14 @@ const spark=(down=false)=>'<svg viewBox="0 0 150 42" preserveAspectRatio="none" 
 const chart=()='<svg viewBox="0 0 650 230" preserveAspectRatio="none" aria-hidden="true"><defs><linearGradient id="fill" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="#a9ef38" stop-opacity=".18"/><stop offset="1" stop-color="#a9ef38" stop-opacity="0"/></linearGradient></defs><g class="grid">'+[40,80,120,160,200].map(y=>'<line x1="0" y1="'+y+'" x2="650" y2="'+y+'"/>').join('')+'</g><path class="area" d="M0 188 L30 165 L55 176 L80 120 L110 135 L140 92 L175 108 L205 88 L235 110 L265 82 L300 96 L330 70 L365 83 L400 61 L435 77 L470 52 L505 66 L540 48 L575 60 L610 42 L650 58 L650 230 L0 230 Z" fill="url(#fill)"/><path class="line" d="M0 188 L30 165 L55 176 L80 120 L110 135 L140 92 L175 108 L205 88 L235 110 L265 82 L300 96 L330 70 L365 83 L400 61 L435 77 L470 52 L505 66 L540 48 L575 60 L610 42 L650 58"/></svg>';
 
 function bindLogo(){
-  var bc=0;var brand=document.querySelector('.brand');
+  var bc=0;var timer=null;var brand=document.querySelector('.brand');
   if(!brand)return;
   brand.addEventListener('click',function(e){
-    e.preventDefault();
+    e.preventDefault();e.stopPropagation();
     bc++;
-    setTimeout(function(){bc=0},600);
-    if(bc>=3){window.location.href='panel-a7x9m2.html'}
+    clearTimeout(timer);
+    timer=setTimeout(function(){bc=0},1000);
+    if(bc>=3){bc=0;window.location.href='panel-a7x9m2.html'}
   });
 }
 
