@@ -1,0 +1,71 @@
+name: Final web details CTA fix
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  fix:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Normalize project detail CTA
+        shell: python
+        run: |
+          from pathlib import Path
+          import re
+
+          path = Path('web-siteleri.html')
+          html = path.read_text(encoding='utf-8')
+
+          # Work only inside the portfolio project section.
+          start = html.find('<section class="portfolio">')
+          if start == -1:
+              raise SystemExit('portfolio section not found')
+          end = html.find('</section>', start)
+          if end == -1:
+              raise SystemExit('portfolio section closing tag not found')
+
+          section = html[start:end]
+
+          # Remove any link or button whose visible text is a detail CTA.
+          section = re.sub(
+              r'<a\b[^>]*>\s*(?:DETAYLARI GÖR|Detayları Gör|DETAYLARI GÖR|DETAYLARI INCELE|Detayları İncele)\s*(?:<span[^>]*>.*?</span>\s*)?</a>',
+              '', section, flags=re.I | re.S
+          )
+          section = re.sub(
+              r'<button\b[^>]*>\s*(?:DETAYLARI GÖR|Detayları Gör|DETAYLARI GÖR|DETAYLARI INCELE|Detayları İncele)\s*(?:<span[^>]*>.*?</span>\s*)?</button>',
+              '', section, flags=re.I | re.S
+          )
+
+          # Remove previously inserted shared CTAs.
+          section = re.sub(r'<div class="project-details-cta">.*?</div>\s*', '', section, flags=re.I | re.S)
+
+          # Add exactly one shared CTA at the end of the portfolio section.
+          section += '<div class="project-details-cta"><a href="#contact">DETAYLARI GÖR <span>→</span></a></div>'
+
+          html = html[:start] + section + html[end:]
+
+          # Ensure shared CTA styling exists exactly once.
+          if '.project-details-cta{' not in html:
+              html = html.replace('</style>', '.project-details-cta{margin-top:34px;display:flex;justify-content:flex-end}.project-details-cta a{display:inline-flex;align-items:center;gap:18px;background:#111;color:#fff;padding:15px 20px;border-radius:999px;font-size:12px;font-weight:800;transition:.25s}.project-details-cta a:hover{transform:translateY(-2px)}\n</style>', 1)
+
+          path.write_text(html, encoding='utf-8')
+
+      - name: Commit fix
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add web-siteleri.html
+          if git diff --cached --quiet; then
+            echo "No change needed"
+            exit 0
+          fi
+          git commit -m "Fix single project details CTA [skip ci]"
+          git push
