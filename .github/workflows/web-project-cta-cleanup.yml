@@ -28,30 +28,43 @@ jobs:
 
           html = path.read_text(encoding='utf-8')
 
-          # Remove per-card detail links/buttons from the project cards only.
           project_start = html.find('<section class="portfolio">')
           if project_start == -1:
               raise SystemExit('portfolio section not found')
           project_end = html.find('</section>', project_start)
           if project_end == -1:
               raise SystemExit('portfolio section end not found')
+
           section = html[project_start:project_end]
 
-          section = re.sub(r'<a[^>]*>\\s*(?:DETAYLARI GÖR|Detayları Gör|DETAYLARI INCELE|Detayları İncele)[^<]*</a>', '', section, flags=re.I)
-          section = re.sub(r'<button[^>]*>\\s*(?:DETAYLARI GÖR|Detayları Gör|DETAYLARI INCELE|Detayları İncele)[^<]*</button>', '', section, flags=re.I)
+          # Remove any existing per-card "Detayları Gör" links/buttons.
+          section = re.sub(
+              r'<a\b[^>]*>\s*(?:DETAYLARI GÖR|Detayları Gör|DETAYLARI INCELE|Detayları İncele)\s*</a>',
+              '', section, flags=re.I
+          )
+          section = re.sub(
+              r'<button\b[^>]*>\s*(?:DETAYLARI GÖR|Detayları Gör|DETAYLARI INCELE|Detayları İncele)\s*</button>',
+              '', section, flags=re.I
+          )
 
-          # Add a single, shared CTA beneath all project cards.
-          cta = '''<div class="project-details-cta"><a href="#contact">Projelerin detaylarını gör <span>→</span></a></div>'''
-          section = re.sub(r'<div class="project-cards">(.*)</div>\\s*$', lambda m: m.group(0) + cta, section, flags=re.S)
+          # Remove a previous shared CTA before adding the final one.
+          section = re.sub(
+              r'<div class="project-details-cta".*?</div>',
+              '', section, flags=re.S
+          )
 
-          if 'project-details-cta' not in section:
-              section += cta
+          # One single CTA beneath the project cards.
+          cta = '''<div class="project-details-cta"><a href="#contact">Detayları gör <span>→</span></a></div>'''
+          section += cta
 
           html = html[:project_start] + section + html[project_end:]
 
-          # Styling for the single shared CTA.
           if 'project-details-cta' not in html.split('</style>', 1)[0]:
-              html = html.replace('</style>', '''\n.project-details-cta{margin-top:34px;display:flex;justify-content:flex-end}.project-details-cta a{display:inline-flex;align-items:center;gap:18px;background:#111;color:#fff;padding:15px 20px;border-radius:999px;font-size:12px;font-weight:800;transition:.25s}.project-details-cta a:hover{transform:translateY(-2px)}\n</style>''', 1)
+              html = html.replace(
+                  '</style>',
+                  '''\n.project-details-cta{margin-top:34px;display:flex;justify-content:flex-end}.project-details-cta a{display:inline-flex;align-items:center;gap:18px;background:#111;color:#fff;padding:15px 20px;border-radius:999px;font-size:12px;font-weight:800;transition:.25s}.project-details-cta a:hover{transform:translateY(-2px)}\n</style>''',
+                  1
+              )
 
           path.write_text(html, encoding='utf-8')
           PY
