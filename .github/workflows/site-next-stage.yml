@@ -18,14 +18,16 @@ jobs:
           python - <<'PY'
           from pathlib import Path
           import re
+
+          # ---- Homepage/app architecture ----
           p = Path('app.js')
           s = p.read_text(encoding='utf-8')
 
-          # Clean product route
-          s = s.replace("mova.html", "mova/")
-          s = s.replace("locamo.html", "mova/")
+          # Clean product route and remove legacy extensioned routes.
+          s = s.replace('mova.html', 'mova/')
+          s = s.replace('locamo.html', 'mova/')
 
-          # Make navigation reflect the new positioning.
+          # Make navigation reflect the final positioning.
           s = re.sub(
               r'<div class="navlinks">.*?</div>',
               '<div class="navlinks"><a class="active" href="#top">Ana Sayfa</a><a href="#products">Ürünler</a><a href="#web-work">Web Çalışmaları</a><a href="#about">Hakkımda</a><a href="#skills">Yetenekler</a><a href="#contact">İletişim</a></div>',
@@ -39,12 +41,41 @@ jobs:
           if 'id="products" class="wrap reveal"' not in s:
               s = s.replace('<section class="work wrap reveal">', direction + '<section class="work wrap reveal">', 1)
 
-          s = s.replace('NELER YAPIYORUM?', 'SEÇİLİ ÇALIŞMALAR', 1)
+          # Remove the duplicated legacy selected-work block and the duplicated Mova case block.
+          s = s.replace('<section class="work wrap reveal">', '<section class="work wrap reveal" style="display:none!important">', 1)
+          s = s.replace('<section class="mova-case', '<section class="mova-case" style="display:none!important"', 1)
+
           p.write_text(s, encoding='utf-8')
+
+          # ---- Mova product page ----
+          mp = Path('mova.html')
+          if mp.exists():
+              m = mp.read_text(encoding='utf-8')
+              m = re.sub(r'Early access', '', m, flags=re.I)
+              m = re.sub(r'Erken erişim', '', m, flags=re.I)
+              m = re.sub(r'\b58%', '30%', m)
+              m = re.sub(r'width:58%', 'width:30%', m)
+              m = re.sub(r'width\s*=\s*"58%"', 'width="30%"', m)
+              m = re.sub(r'\b58\s*%', '30%', m)
+              m = m.replace('mova.html', 'mova/')
+              # Replace any legacy access CTA with a neutral product CTA.
+              m = re.sub(r'>\s*(?:Erken erişim|Early access)\s*<', '>Mova\'yı incele<', m, flags=re.I)
+              mp.write_text(m, encoding='utf-8')
+
+          # ---- Web works page: one CTA only ----
+          wp = Path('web-siteleri.html')
+          if wp.exists():
+              w = wp.read_text(encoding='utf-8')
+              # Remove project-level detail links; keep only the shared CTA.
+              w = re.sub(r'<a\b[^>]*>\s*[^<]*(?:DETAYLARI GÖR|Detayları Gör|Detayları gör)\s*[^<]*</a>', '', w, flags=re.I)
+              shared = '<div class="service-cta" style="margin-top:45px;justify-content:center"><a href="#contact">Web çalışmalarını incele <span>→</span></a></div>'
+              if 'Web çalışmalarını incele <span>→</span>' not in w:
+                  w = re.sub(r'(</section>)(\s*<section class="contact")', shared + r'\1\2', w, count=1, flags=re.I)
+              wp.write_text(w, encoding='utf-8')
           PY
       - name: Commit changes
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add app.js
-          if git diff --cached --quiet; then echo "No changes"; else git commit -m "Refine product and web portfolio sections"; git push; fi
+          git add app.js mova.html web-siteleri.html
+          if git diff --cached --quiet; then echo "No changes"; else git commit -m "Finalize portfolio homepage and project flows"; git push; fi
