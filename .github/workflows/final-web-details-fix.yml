@@ -15,7 +15,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Normalize project detail CTA
+      - name: Normalize the web-project details CTA
         shell: python
         run: |
           from pathlib import Path
@@ -24,7 +24,6 @@ jobs:
           path = Path('web-siteleri.html')
           html = path.read_text(encoding='utf-8')
 
-          # Work only inside the portfolio project section.
           start = html.find('<section class="portfolio">')
           if start == -1:
               raise SystemExit('portfolio section not found')
@@ -34,27 +33,37 @@ jobs:
 
           section = html[start:end]
 
-          # Remove any link or button whose visible text is a detail CTA.
+          # Remove every existing details CTA in the portfolio section,
+          # including anchors, buttons, bold labels and nested spans.
+          detail_text = r'(?:DETAYLARI\s*(?:GÖR|İNCELE|INCELE)|DETAYLARINI\s*(?:GÖR|İNCELE|INCELE))'
+          for tag in ('a', 'button', 'b', 'strong', 'span'):
+              section = re.sub(
+                  rf'<{tag}\b[^>]*>\s*{detail_text}\s*(?:<span\b[^>]*>.*?</span>\s*)*</{tag}>',
+                  '', section, flags=re.I | re.S
+              )
+
+          # Remove any previous shared CTA blocks.
           section = re.sub(
-              r'<a\b[^>]*>\s*(?:DETAYLARI GÖR|Detayları Gör|DETAYLARI GÖR|DETAYLARI INCELE|Detayları İncele)\s*(?:<span[^>]*>.*?</span>\s*)?</a>',
-              '', section, flags=re.I | re.S
-          )
-          section = re.sub(
-              r'<button\b[^>]*>\s*(?:DETAYLARI GÖR|Detayları Gör|DETAYLARI GÖR|DETAYLARI INCELE|Detayları İncele)\s*(?:<span[^>]*>.*?</span>\s*)?</button>',
+              r'<div\b[^>]*class=["\'][^"\']*project-details-cta[^"\']*["\'][^>]*>.*?</div>',
               '', section, flags=re.I | re.S
           )
 
-          # Remove previously inserted shared CTAs.
-          section = re.sub(r'<div class="project-details-cta">.*?</div>\s*', '', section, flags=re.I | re.S)
+          # Also remove generic elements whose visible text is exactly a details CTA.
+          section = re.sub(
+              rf'<([a-z0-9]+)\b[^>]*>\s*{detail_text}\s*</\1>',
+              '', section, flags=re.I | re.S
+          )
 
-          # Add exactly one shared CTA at the end of the portfolio section.
-          section += '<div class="project-details-cta"><a href="#contact">DETAYLARI GÖR <span>→</span></a></div>'
+          # One and only one CTA, after the project cards.
+          cta = '<div class="project-details-cta"><a href="#contact">DETAYLARI GÖR <span>→</span></a></div>'
+          section = section.rstrip() + cta
 
           html = html[:start] + section + html[end:]
 
-          # Ensure shared CTA styling exists exactly once.
-          if '.project-details-cta{' not in html:
-              html = html.replace('</style>', '.project-details-cta{margin-top:34px;display:flex;justify-content:flex-end}.project-details-cta a{display:inline-flex;align-items:center;gap:18px;background:#111;color:#fff;padding:15px 20px;border-radius:999px;font-size:12px;font-weight:800;transition:.25s}.project-details-cta a:hover{transform:translateY(-2px)}\n</style>', 1)
+          # Ensure only one CTA style block exists.
+          html = re.sub(r'\n?\.project-details-cta\{.*?</style>', '', html, count=1, flags=re.S)
+          style = '.project-details-cta{margin-top:34px;display:flex;justify-content:flex-end}.project-details-cta a{display:inline-flex;align-items:center;gap:18px;background:#111;color:#fff;padding:15px 20px;border-radius:999px;font-size:12px;font-weight:800;transition:.25s}.project-details-cta a:hover{transform:translateY(-2px)}\n'
+          html = html.replace('</style>', style + '</style>', 1)
 
           path.write_text(html, encoding='utf-8')
 
@@ -67,5 +76,5 @@ jobs:
             echo "No change needed"
             exit 0
           fi
-          git commit -m "Fix single project details CTA [skip ci]"
+          git commit -m "Normalize single web details CTA [skip ci]"
           git push
