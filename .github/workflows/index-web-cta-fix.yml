@@ -1,0 +1,59 @@
+name: Fix main site web details CTA
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  fix:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Normalize main site CTA
+        shell: python
+        run: |
+          from pathlib import Path
+          import re
+
+          path = Path('index.html')
+          html = path.read_text(encoding='utf-8')
+
+          # Remove every existing main-site detail CTA so only one remains.
+          html = re.sub(r'<a\b[^>]*>\s*DETAYLARI\s+GÖR\s*(?:<span[^>]*>.*?</span>\s*)?</a>', '', html, flags=re.I | re.S)
+          html = re.sub(r'<button\b[^>]*>\s*DETAYLARI\s+GÖR\s*(?:<span[^>]*>.*?</span>\s*)?</button>', '', html, flags=re.I | re.S)
+          html = re.sub(r'<a\b[^>]*>\s*Detayları\s+Gör\s*(?:<span[^>]*>.*?</span>\s*)?</a>', '', html, flags=re.I | re.S)
+
+          cta = '<div class="main-web-details-cta"><a href="web-siteleri.html">DETAYLARI GÖR <span>→</span></a></div>'
+
+          # Put the single CTA directly after the Web Çalışmaları card when present.
+          marker = 'href="web-siteleri.html"'
+          pos = html.find(marker)
+          if pos != -1:
+              end_a = html.find('</a>', pos)
+              if end_a != -1:
+                  insert_at = end_a + 4
+                  html = html[:insert_at] + cta + html[insert_at:]
+              else:
+                  html = html.replace('</main>', cta + '</main>', 1)
+          else:
+              html = html.replace('</main>', cta + '</main>', 1)
+
+          if '.main-web-details-cta{' not in html:
+              style = '.main-web-details-cta{margin:26px 0 0;display:flex;justify-content:flex-end}.main-web-details-cta a{display:inline-flex;align-items:center;gap:18px;background:#111;color:#fff;padding:15px 20px;border-radius:999px;font-size:12px;font-weight:800;transition:.25s}.main-web-details-cta a:hover{transform:translateY(-2px)}\n'
+              html = html.replace('</style>', style + '</style>', 1)
+
+          path.write_text(html, encoding='utf-8')
+
+      - name: Commit
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html
+          if git diff --cached --quiet; then exit 0; fi
+          git commit -m "Fix main site web details CTA [skip ci]"
+          git push
