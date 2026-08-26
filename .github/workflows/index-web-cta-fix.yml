@@ -1,4 +1,4 @@
-name: Fix main site web details CTA
+name: AI agent — fix main site web details CTA
 
 on:
   push:
@@ -9,12 +9,13 @@ permissions:
   contents: write
 
 jobs:
-  fix:
+  ai_agent_fix:
     if: github.actor != 'github-actions[bot]'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Normalize main site CTA
+
+      - name: AI-style structural cleanup
         shell: python
         run: |
           from pathlib import Path
@@ -23,37 +24,78 @@ jobs:
           path = Path('index.html')
           html = path.read_text(encoding='utf-8')
 
-          # Remove every existing main-site detail CTA so only one remains.
-          html = re.sub(r'<a\b[^>]*>\s*DETAYLARI\s+GÖR\s*(?:<span[^>]*>.*?</span>\s*)?</a>', '', html, flags=re.I | re.S)
-          html = re.sub(r'<button\b[^>]*>\s*DETAYLARI\s+GÖR\s*(?:<span[^>]*>.*?</span>\s*)?</button>', '', html, flags=re.I | re.S)
-          html = re.sub(r'<a\b[^>]*>\s*Detayları\s+Gör\s*(?:<span[^>]*>.*?</span>\s*)?</a>', '', html, flags=re.I | re.S)
+          # 1) Remove CTA wrappers previously injected by earlier fixes.
+          html = re.sub(r'<div[^>]*class=["\'][^"\']*(?:main-web-details-cta|project-details-cta)[^"\']*["\'][^>]*>.*?</div>\s*', '', html, flags=re.I|re.S)
 
+          # 2) Remove every anchor/button containing any variation of the detail CTA.
+          cta_text = r'(?:DETAYLARI\s+GÖR|Detayları\s+Gör|DETAYLARI\s+İNCELE|Detayları\s+İncele)'
+          for tag in ('a', 'button'):
+              pattern = rf'<{tag}\b[^>]*>.*?{cta_text}.*?</{tag}>\s*'
+              html = re.sub(pattern, '', html, flags=re.I|re.S)
+
+          # 3) Remove standalone CTA text nodes left behind by previous patches.
+          html = re.sub(cta_text + r'\s*(?:<span[^>]*>.*?</span>)?', '', html, flags=re.I|re.S)
+
+          # 4) Add exactly one CTA after the Web Çalışmaları block.
           cta = '<div class="main-web-details-cta"><a href="web-siteleri.html">DETAYLARI GÖR <span>→</span></a></div>'
 
-          # Put the single CTA directly after the Web Çalışmaları card when present.
-          marker = 'href="web-siteleri.html"'
-          pos = html.find(marker)
-          if pos != -1:
-              end_a = html.find('</a>', pos)
-              if end_a != -1:
-                  insert_at = end_a + 4
-                  html = html[:insert_at] + cta + html[insert_at:]
-              else:
-                  html = html.replace('</main>', cta + '</main>', 1)
-          else:
+          inserted = False
+          # Prefer the explicit Web Çalışmaları section/card marker used by the site.
+          for marker in ('id="web-work"', 'id="products"'):
+              pos = html.find(marker)
+              if pos != -1:
+                  # Find the nearest enclosing section/article after the marker.
+                  section_start = html.rfind('<section', 0, pos)
+                  section_end = html.find('</section>', pos)
+                  if section_start != -1 and section_end != -1:
+                      block = html[section_start:section_end]
+                      # If this is the combined products block, put CTA immediately after the Web card anchor.
+                      web_anchor = block.find('href="web-siteleri.html"')
+                      if web_anchor != -1:
+                          a_end = block.find('</a>', web_anchor)
+                          if a_end != -1:
+                              insert_at = section_start + a_end + 4
+                              html = html[:insert_at] + cta + html[insert_at:]
+                              inserted = True
+                              break
+
+          if not inserted:
+              # Fallback: place one CTA before the first contact section.
+              contact_pos = html.find('id="contact"')
+              if contact_pos != -1:
+                  section_start = html.rfind('<section', 0, contact_pos)
+                  html = html[:section_start] + cta + html[section_start:]
+                  inserted = True
+
+          if not inserted:
               html = html.replace('</main>', cta + '</main>', 1)
 
-          if '.main-web-details-cta{' not in html:
-              style = '.main-web-details-cta{margin:26px 0 0;display:flex;justify-content:flex-end}.main-web-details-cta a{display:inline-flex;align-items:center;gap:18px;background:#111;color:#fff;padding:15px 20px;border-radius:999px;font-size:12px;font-weight:800;transition:.25s}.main-web-details-cta a:hover{transform:translateY(-2px)}\n'
-              html = html.replace('</style>', style + '</style>', 1)
+          style = '''.main-web-details-cta{margin:28px 0 0;display:flex;justify-content:flex-end}.main-web-details-cta a{display:inline-flex;align-items:center;gap:18px;background:#111;color:#fff;padding:15px 20px;border-radius:999px;font-size:12px;font-weight:800;transition:transform .25s}.main-web-details-cta a:hover{transform:translateY(-2px)}'''
+          html = re.sub(r'\.main-web-details-cta\{.*?\}', '', html, count=1, flags=re.S) if '.main-web-details-cta{' in html else html
+          if '</style>' in html:
+              html = html.replace('</style>', style + '\n</style>', 1)
 
           path.write_text(html, encoding='utf-8')
 
-      - name: Commit
+      - name: Verify exactly one visible CTA
+        shell: python
+        run: |
+          from pathlib import Path
+          import re
+          html = Path('index.html').read_text(encoding='utf-8')
+          count = len(re.findall(r'DETAYLARI\s+GÖR|Detayları\s+Gör', html, flags=re.I))
+          print('CTA text count:', count)
+          if count != 1:
+              raise SystemExit(f'Expected exactly 1 CTA, found {count}')
+
+      - name: Commit fix
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add index.html
-          if git diff --cached --quiet; then exit 0; fi
-          git commit -m "Fix main site web details CTA [skip ci]"
+          if git diff --cached --quiet; then
+            echo "No changes needed"
+            exit 0
+          fi
+          git commit -m "Fix main site web details CTA with agent cleanup [skip ci]"
           git push
