@@ -1,0 +1,165 @@
+name: Apply Web Çalışmaları Design
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Apply Web Çalışmaları layout
+        shell: python
+        run: |
+          from pathlib import Path
+          import re
+
+          path = Path('index.html')
+          html = path.read_text(encoding='utf-8')
+
+          section = r'''<section class="section web-services" id="web-calismalari">
+            <div class="web-services-box">
+              <div class="web-services-head">
+                <div>
+                  <div class="eyebrow" style="color:#777">WEB ÇALIŞMALARI</div>
+                  <h2>Markaları <em>dijitalde</em><br>büyütüyorum.</h2>
+                </div>
+                <p>Hazır şablon yerine markaya göre tasarlanmış deneyimler.</p>
+              </div>
+
+              <div class="service-grid">
+                <article class="service-card">
+                  <small>01 / BUSINESS</small>
+                  <h3>Kurumsal Web Sitesi</h3>
+                  <p>Şirketin güvenilirliğini ve marka kimliğini yansıtan modern responsive web siteleri.</p>
+                </article>
+                <article class="service-card">
+                  <small>02 / PERSONAL</small>
+                  <h3>Kişisel Web Sitesi</h3>
+                  <p>Portföy, CV ve kişisel marka için özel tasarım ve geliştirme.</p>
+                </article>
+                <article class="service-card">
+                  <small>03 / CAMPAIGN</small>
+                  <h3>Landing Page</h3>
+                  <p>Ürün ve kampanyalar için yüksek dönüşüm odaklı landing page çözümleri.</p>
+                </article>
+                <article class="service-card">
+                  <small>04 / SPECIAL</small>
+                  <h3>Özel Web Projeleri</h3>
+                  <p>İhtiyacınıza özel web tabanlı çözümler ve özelleştirilmiş projeler.</p>
+                </article>
+              </div>
+
+              <div class="main-web-details-cta">
+                <a href="web-siteleri.html">DETAYLARI GÖR <span>→</span></a>
+              </div>
+            </div>
+          </section>'''
+
+          pattern = r'<section\b[^>]*class=["\'][^"\']*web-services[^"\']*["\'][^>]*>.*?</section>'
+          new_html, count = re.subn(pattern, section, html, count=1, flags=re.I | re.S)
+          if count != 1:
+              raise SystemExit('Web Çalışmaları section bulunamadı; site güvenli şekilde değiştirilmedi.')
+
+          # Eski servis kartı CTA'larını yalnızca bu bölümden temizle.
+          new_html = re.sub(r'<a\b[^>]*class=["\'][^"\']*service-link[^"\']*["\'][^>]*>.*?</a>', '', new_html, flags=re.I | re.S)
+
+          # Görsel referanstaki premium mobil görünüm: kartlar tek sütun, CTA en altta.
+          css = r'''
+          <style id="web-services-final-design">
+          .web-services{padding-top:80px}
+          .web-services-box{background:#111;color:#fff;border-radius:34px;padding:70px;overflow:hidden}
+          .web-services-head{display:flex;justify-content:space-between;gap:40px;align-items:end}
+          .web-services-head h2{font-size:clamp(48px,6vw,82px);line-height:.88;letter-spacing:-.075em;margin-top:14px}
+          .web-services-head h2 em{font-family:Georgia,serif;font-weight:400}
+          .web-services-head p{max-width:360px;color:#999;font-size:13px;line-height:1.7}
+          .service-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-top:48px}
+          .service-card{padding:40px 38px;border:1px solid #383838;border-radius:24px;transition:.35s;min-height:230px;display:flex;flex-direction:column;justify-content:center}
+          .service-card:hover{transform:translateY(-4px);border-color:#666;background:#151515}
+          .service-card small{display:block;color:#666;font-size:10px;letter-spacing:2.2px;margin-bottom:26px}
+          .service-card h3{font-size:clamp(28px,3vw,42px);letter-spacing:-.055em;margin-bottom:13px}
+          .service-card p{color:#999;font-size:14px;line-height:1.7;max-width:520px}
+          .service-link{display:none!important}
+          .main-web-details-cta{margin:34px 0 0;display:flex;justify-content:center}
+          .main-web-details-cta a{display:inline-flex;align-items:center;justify-content:center;gap:22px;background:transparent;color:#fff;border:1px solid #777;padding:17px 34px;border-radius:999px;font-size:12px;font-weight:800;letter-spacing:2px;transition:.3s}
+          .main-web-details-cta a:hover{background:#fff;color:#111;border-color:#fff;transform:translateY(-2px)}
+          .main-web-details-cta a span{font-size:18px;line-height:0}
+          @media(max-width:850px){
+            .web-services{padding-top:55px}
+            .web-services-box{padding:45px 30px;border-radius:30px}
+            .web-services-head{display:block}
+            .web-services-head h2{font-size:clamp(46px,13vw,68px);margin-top:16px}
+            .web-services-head p{margin-top:26px;font-size:15px;max-width:420px}
+            .service-grid{grid-template-columns:1fr;gap:12px;margin-top:46px}
+            .service-card{min-height:0;padding:42px 28px;border-radius:22px}
+            .service-card small{margin-bottom:28px}
+            .service-card h3{font-size:36px}
+            .service-card p{font-size:15px;line-height:1.75}
+            .main-web-details-cta{margin-top:32px}
+            .main-web-details-cta a{width:100%;padding:18px 24px}
+          }
+          @media(max-width:560px){
+            .web-services-box{padding:38px 22px}
+            .web-services-head h2{font-size:48px}
+            .service-card{padding:34px 24px}
+            .service-card h3{font-size:32px}
+          }
+          </style>
+          '''
+          new_html = new_html.replace('</head>', css + '\n</head>', 1)
+          path.write_text(new_html, encoding='utf-8')
+
+      - name: Verify design
+        shell: python
+        run: |
+          from pathlib import Path
+          import re
+          html = Path('index.html').read_text(encoding='utf-8')
+          section = re.search(r'<section\b[^>]*class=["\'][^"\']*web-services[^"\']*["\'][^>]*>.*?</section>', html, re.I | re.S)
+          if not section:
+              raise SystemExit('Web Çalışmaları section doğrulanamadı.')
+          block = section.group(0)
+          if re.search(r'Detayları\s*gör', block, re.I):
+              if len(re.findall(r'DETAYLARI\s*GÖR', block, re.I)) != 1:
+                  raise SystemExit('Web Çalışmaları alanında tek CTA kuralı sağlanmadı.')
+          if re.search(r'Web çalışmalarını incele', block, re.I):
+              raise SystemExit('Eski Web çalışmalarını incele CTA kaldı.')
+          if len(re.findall(r'class=["\'][^"\']*service-card', block, re.I)) != 4:
+              raise SystemExit('Dört servis kartı bulunamadı.')
+
+      - name: Commit updated design
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html
+          if git diff --cached --quiet; then
+            echo "No source changes to commit."
+          else
+            git commit -m "Redesign Web Çalışmaları section"
+            git push
+          fi
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v4
+        with:
+          path: '.'
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
