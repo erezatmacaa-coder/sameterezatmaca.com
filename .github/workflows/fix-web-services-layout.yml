@@ -1,0 +1,76 @@
+name: Fix Web Services Layout
+
+on:
+  push:
+    branches: [main]
+
+permissions:
+  contents: write
+
+jobs:
+  fix-layout:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Apply requested Web Development layout
+        shell: python
+        run: |
+          from pathlib import Path
+          import re
+
+          path = Path('index.html')
+          html = path.read_text(encoding='utf-8')
+
+          # Remove the misplaced CTA from the desktop navigation.
+          html = re.sub(
+              r'<div class="main-web-details-cta">\s*<a href="web-siteleri\.html">DETAYLARI GÖR\s*<span>→</span></a>\s*</div>',
+              '', html, flags=re.I
+          )
+
+          # Remove every per-card Details link in the Web Development cards.
+          html = re.sub(
+              r'\s*<a class="service-link" href="web-siteleri\.html">\s*Detayları gör\s*→\s*</a>',
+              '', html, flags=re.I
+          )
+
+          # Ensure exactly one CTA exists at the bottom of the service grid.
+          cta = '''\n    <div class="main-web-details-cta">\n      <a href="web-siteleri.html">DETAYLARI GÖR <span>→</span></a>\n    </div>'''
+          html = re.sub(r'\s*<div class="main-web-details-cta">.*?</div>\s*</div>\s*</section>', '', html, flags=re.I | re.S)
+          marker = '</div>\n  </div>\n</section>\n<section id="about"'
+          if marker in html:
+              html = html.replace('</div>\n  </div>\n</section>\n<section id="about"', '</div>' + cta + '\n  </div>\n</section>\n<section id="about"', 1)
+          else:
+              # Fallback: insert directly after the closing service-grid.
+              html = html.replace('</div>\n  </div>\n</section>\n<section id="about"', '</div>' + cta + '\n  </div>\n</section>\n<section id="about"', 1)
+
+          # Make the single CTA match the supplied reference: centered, outlined, dark-section style.
+          style = '''\n<style id="web-services-final-cta">\n.main-web-details-cta{margin:30px 0 0;display:flex;justify-content:center;width:100%}\n.main-web-details-cta a{display:inline-flex;align-items:center;justify-content:center;gap:34px;min-width:350px;padding:17px 38px;border:1px solid #fff;border-radius:999px;background:transparent;color:#fff;font-size:12px;font-weight:700;letter-spacing:3px;transition:background .25s,color .25s,transform .25s}\n.main-web-details-cta a span{font-size:18px;line-height:1;letter-spacing:0}\n.main-web-details-cta a:hover{background:#fff;color:#111;transform:translateY(-2px)}\n.service-link{display:none!important}\n@media(max-width:560px){.main-web-details-cta a{min-width:0;width:100%;padding:16px 24px;gap:22px;font-size:11px}}\n</style>\n'''
+          html = re.sub(r'\s*<style id="web-services-final-cta">.*?</style>\s*', '\n', html, flags=re.I | re.S)
+          html = html.replace('</head>', style + '</head>', 1)
+
+          # Verification: four cards, no card-level CTA, exactly one section CTA.
+          section = re.search(r'<section id="web-sites".*?</section>', html, flags=re.I | re.S)
+          if not section:
+              raise SystemExit('Web Development section not found')
+          block = section.group(0)
+          card_links = re.findall(r'class="service-link"', block, flags=re.I)
+          ctas = re.findall(r'class="main-web-details-cta"', block, flags=re.I)
+          if card_links or len(ctas) != 1:
+              raise SystemExit(f'Validation failed: card_links={len(card_links)}, ctas={len(ctas)}')
+
+          path.write_text(html, encoding='utf-8')
+
+      - name: Commit corrected index
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html
+          if git diff --cached --quiet; then
+            echo "No changes needed."
+          else
+            git commit -m "Apply single Web Development details CTA"
+            git push
+          fi
