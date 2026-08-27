@@ -1,0 +1,63 @@
+name: Rename Mova to Nerio
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths-ignore:
+      - '.github/workflows/rename-mova-to-nerio.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  rename-brand:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Replace Mova branding
+        shell: bash
+        run: |
+          set -e
+          changed=0
+          while IFS= read -r -d '' file; do
+            if grep -Iq . "$file"; then
+              if grep -Eq 'Mova|MOVA|mova' "$file"; then
+                sed -i -E 's/MOVA/Nerio/g; s/Mova/Nerio/g; s/mova/nerio/g' "$file"
+                changed=1
+              fi
+            fi
+          done < <(find . -type f \
+            -not -path './.git/*' \
+            -not -path './node_modules/*' \
+            -not -path './.github/workflows/rename-mova-to-nerio.yml' \
+            -print0)
+
+          # Rename the old product entry files/directories when they exist.
+          if [ -f mova.html ] && [ ! -f nerio.html ]; then
+            git mv mova.html nerio.html
+            changed=1
+          fi
+          if [ -d mova ] && [ ! -d nerio ]; then
+            git mv mova nerio
+            changed=1
+          fi
+
+          if [ "$changed" -eq 0 ]; then
+            echo 'No Mova references found.'
+          fi
+
+      - name: Commit and push
+        shell: bash
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -A
+          if git diff --cached --quiet; then
+            echo 'Nothing to commit.'
+            exit 0
+          fi
+          git commit -m 'Replace Mova branding with Nerio'
+          git push
