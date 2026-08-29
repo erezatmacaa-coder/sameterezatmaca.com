@@ -1,0 +1,144 @@
+name: Apply Web Detail View System
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  apply:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Add one working details CTA and modal
+        shell: python
+        run: |
+          from pathlib import Path
+          import re
+
+          path = Path('index.html')
+          html = path.read_text(encoding='utf-8')
+
+          # Work only on the Web Çalışmaları section if it exists.
+          m = re.search(r'(<section\b[^>]*class=["\'][^"\']*web-services[^"\']*["\'][^>]*>)(.*?)(</section>)', html, re.I|re.S)
+          if not m:
+              raise SystemExit('Web Çalışmaları section not found; no changes made.')
+
+          section = m.group(0)
+
+          # Remove all variants of the old CTA from cards/section.
+          section = re.sub(r'<a\b[^>]*>\s*(?:DETAYLARI\s*GÖR|WEB\s*ÇALIŞMALARINI\s*İNCELE)\s*(?:<span\b[^>]*>.*?</span>)?\s*</a>', '', section, flags=re.I|re.S)
+          section = re.sub(r'<button\b[^>]*>\s*(?:DETAYLARI\s*GÖR|WEB\s*ÇALIŞMALARINI\s*İNCELE)\s*(?:<span\b[^>]*>.*?</span>)?\s*</button>', '', section, flags=re.I|re.S)
+          section = re.sub(r'<div\b[^>]*class=["\'][^"\']*main-web-details-cta[^"\']*["\'][^>]*>.*?</div>', '', section, flags=re.I|re.S)
+
+          # Remove per-card detail links.
+          section = re.sub(r'<a\b[^>]*class=["\'][^"\']*service-link[^"\']*["\'][^>]*>.*?</a>', '', section, flags=re.I|re.S)
+
+          cta = '<div class="main-web-details-cta"><button type="button" id="webDetailsOpen">DETAYLARI GÖR <span>→</span></button></div>'
+          # Insert immediately after the service grid when possible.
+          if 'class="service-grid"' in section:
+              pos = section.find('</div>', section.find('class="service-grid"'))
+              # Find the actual closing of the grid by balancing div tags.
+              tail = section[section.find('class="service-grid"'):]
+              depth = 0; end = None
+              for mm in re.finditer(r'<div\b|</div>', tail, re.I):
+                  if mm.group(0).lower().startswith('<div'):
+                      depth += 1
+                  else:
+                      depth -= 1
+                  if depth == 0:
+                      end = section.find('class="service-grid"') + mm.end(); break
+              if end is not None:
+                  section = section[:end] + cta + section[end:]
+              else:
+                  section = section.replace('</section>', cta + '</section>', 1)
+          else:
+              section = section.replace('</section>', cta + '</section>', 1)
+
+          html = html[:m.start()] + section + html[m.end():]
+
+          # Replace any old modal system with a dedicated details modal.
+          html = re.sub(r'<div\b[^>]*id=["\']webDetailsModal["\'][^>]*>.*?</div>\s*', '', html, flags=re.I|re.S)
+          modal = '''
+          <div class="web-details-modal" id="webDetailsModal" aria-hidden="true">
+            <div class="web-details-backdrop" data-close-details></div>
+            <div class="web-details-dialog" role="dialog" aria-modal="true" aria-labelledby="webDetailsTitle">
+              <button class="web-details-close" type="button" aria-label="Kapat" data-close-details>×</button>
+              <p class="web-details-kicker">WEB ÇALIŞMALARI</p>
+              <h3 id="webDetailsTitle">Detayları Gör</h3>
+              <p class="web-details-intro">İhtiyacına göre hangi web çözümünü neden önerdiğimi ve projede neler sunduğumu burada görebilirsin.</p>
+              <div class="web-details-list">
+                <article><span>01</span><div><h4>Kurumsal Web Sitesi</h4><p>Marka güveni, hizmet anlatımı, responsive yapı, temel SEO ve yayına hazırlık.</p></div></article>
+                <article><span>02</span><div><h4>Kişisel Web Sitesi</h4><p>Portföy, kişisel marka, proje sunumu, mobil uyum ve özel görsel dil.</p></div></article>
+                <article><span>03</span><div><h4>Landing Page</h4><p>Tek mesajlı, hızlı açılan, mobil uyumlu ve aksiyona odaklanan kampanya sayfaları.</p></div></article>
+                <article><span>04</span><div><h4>Özel Web Projeleri</h4><p>Özel akışlar, paneller, formlar, entegrasyonlar ve ihtiyaca göre geliştirilen web sistemleri.</p></div></article>
+              </div>
+              <a class="web-details-more" href="web-siteleri.html">Tüm hizmet ve süreci incele <span>→</span></a>
+            </div>
+          </div>
+          '''
+          html = html.replace('</body>', modal + '\n</body>', 1)
+
+          css = '''
+          <style id="web-detail-view-system">
+          .main-web-details-cta{margin:34px 0 0;display:flex;justify-content:center;position:relative;z-index:3}
+          .main-web-details-cta button{display:inline-flex;align-items:center;gap:20px;border:1px solid #777;background:transparent;color:#fff;padding:17px 32px;border-radius:999px;font-size:12px;font-weight:800;letter-spacing:1.6px;cursor:pointer;transition:.28s}
+          .main-web-details-cta button:hover{background:#fff;color:#111;border-color:#fff;transform:translateY(-2px)}
+          .main-web-details-cta button span{font-size:18px;line-height:0}
+          .web-details-modal{display:none;position:fixed;inset:0;z-index:9999;align-items:center;justify-content:center;padding:20px}
+          .web-details-modal.open{display:flex}
+          .web-details-backdrop{position:absolute;inset:0;background:rgba(0,0,0,.6);backdrop-filter:blur(14px)}
+          .web-details-dialog{position:relative;width:min(760px,100%);max-height:min(820px,90vh);overflow:auto;background:#f3f2ee;color:#111;border-radius:28px;padding:48px;box-shadow:0 35px 100px rgba(0,0,0,.3)}
+          .web-details-close{position:absolute;right:18px;top:14px;border:0;background:transparent;font-size:34px;line-height:1;cursor:pointer;color:#111}
+          .web-details-kicker{font-size:10px;letter-spacing:2.4px;color:#777;font-weight:800}
+          .web-details-dialog h3{font-size:clamp(48px,7vw,76px);letter-spacing:-.07em;line-height:.9;margin:14px 0 18px}
+          .web-details-intro{max-width:590px;color:#706d66;font-size:14px;line-height:1.75}
+          .web-details-list{margin-top:30px;border-top:1px solid #d8d5cd}
+          .web-details-list article{display:grid;grid-template-columns:42px 1fr;gap:20px;padding:24px 0;border-bottom:1px solid #d8d5cd}
+          .web-details-list article>span{font-size:10px;color:#999;padding-top:6px}
+          .web-details-list h4{font-size:22px;letter-spacing:-.035em;margin-bottom:6px}
+          .web-details-list p{color:#777;font-size:13px;line-height:1.7}
+          .web-details-more{display:inline-flex;margin-top:28px;align-items:center;gap:16px;background:#111;color:#fff;padding:14px 18px;border-radius:999px;font-size:12px;font-weight:800}
+          @media(max-width:620px){.web-details-dialog{padding:34px 24px;border-radius:24px}.web-details-dialog h3{font-size:48px}.web-details-list h4{font-size:20px}.main-web-details-cta button{width:100%;justify-content:center}}
+          </style>
+          '''
+          html = html.replace('</head>', css + '\n</head>', 1)
+
+          js = '''
+          <script>
+          (() => {
+            const modal = document.getElementById('webDetailsModal');
+            const open = document.getElementById('webDetailsOpen');
+            if (!modal || !open) return;
+            const close = () => { modal.classList.remove('open'); modal.setAttribute('aria-hidden','true'); document.body.style.overflow=''; };
+            open.addEventListener('click', () => { modal.classList.add('open'); modal.setAttribute('aria-hidden','false'); document.body.style.overflow='hidden'; });
+            modal.querySelectorAll('[data-close-details]').forEach(el => el.addEventListener('click', close));
+            document.addEventListener('keydown', e => { if (e.key === 'Escape' && modal.classList.contains('open')) close(); });
+          })();
+          </script>
+          '''
+          html = html.replace('</body>', js + '\n</body>', 1)
+
+          path.write_text(html, encoding='utf-8')
+
+      - name: Verify
+        shell: python
+        run: |
+          from pathlib import Path
+          import re
+          html = Path('index.html').read_text(encoding='utf-8')
+          assert html.count('id="webDetailsOpen"') == 1, 'Expected one details button'
+          assert html.count('id="webDetailsModal"') == 1, 'Expected one details modal'
+          assert 'webDetailsOpen' in html and 'webDetailsModal' in html
+
+      - name: Commit
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html
+          if git diff --cached --quiet; then echo "No changes"; else git commit -m "Add working Web Çalışmaları detail view"; git push; fi
