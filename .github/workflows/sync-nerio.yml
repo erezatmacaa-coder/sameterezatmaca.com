@@ -1,0 +1,58 @@
+name: Sync Nerio App
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/sync-nerio.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout portfolio repository
+        uses: actions/checkout@v4
+
+      - name: Checkout Nerio source repository
+        uses: actions/checkout@v4
+        with:
+          repository: erezatmacaa-coder/nerio
+          ref: main
+          path: .nerio-source
+          fetch-depth: 1
+
+      - name: Copy Nerio app into portfolio root
+        shell: bash
+        run: |
+          set -euo pipefail
+          cp .nerio-source/index.html ./index.html
+          cp .nerio-source/styles.css ./styles.css
+          cp .nerio-source/app.js ./app.js
+          cp .nerio-source/data-store.js ./data-store.js
+          mkdir -p backend
+          cp .nerio-source/backend/.env.example backend/.env.example
+          cp .nerio-source/backend/api-contract.md backend/api-contract.md
+          cp .nerio-source/backend/package.json backend/package.json
+          cp .nerio-source/backend/schema.sql backend/schema.sql
+          cp .nerio-source/backend/server.mjs backend/server.mjs
+          rm -rf .nerio-source
+          printf '%s\n' 'Nerio source: erezatmacaa-coder/nerio' > .nerio-source-info
+          test -f CNAME
+
+      - name: Commit and push synced app
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add index.html styles.css app.js data-store.js backend .nerio-source-info
+          if git diff --cached --quiet; then
+            echo 'No Nerio changes to sync.'
+            exit 0
+          fi
+          git commit -m 'Sync Nerio app into sameterezatmaca.com'
+          git push
