@@ -1,0 +1,87 @@
+name: Fix Site Layout
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths-ignore:
+      - '.github/workflows/fix-site-layout.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  repair:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Repair HTML layout and CTAs
+        shell: python
+        run: |
+          from pathlib import Path
+          import re
+
+          p = Path('index.html')
+          s = p.read_text(encoding='utf-8')
+          original = s
+
+          # Remove all per-card detail CTAs from the Web Development cards.
+          s = re.sub(r'<a\b[^>]*class=["\']service-link["\'][^>]*>.*?</a>', '', s, flags=re.I | re.S)
+
+          # Remove an incorrectly placed duplicate CTA from the desktop nav.
+          s = re.sub(r'<div\s+class=["\']main-web-details-cta["\'][\s\S]*?</div>\s*', '', s, flags=re.I)
+          s = re.sub(r'\s*<a\b[^>]*>\s*Web çalışmalarını incele\s*</a>\s*', '', s, flags=re.I)
+
+          # Ensure the intended single CTA exists once, immediately after the service grid.
+          cta = '<div class="main-web-details-cta"><a href="web-siteleri.html">DETAYLARI GÖR <span>→</span></a></div>'
+          s = re.sub(r'<div class="main-web-details-cta">[\s\S]*?</div>', '', s, flags=re.I)
+          if cta.lower() not in s.lower():
+              marker = '</div>\n  </div>\n</section>\n<section id="about"'
+              if marker in s:
+                  s = s.replace(marker, f'</div>\n    {cta}\n  </div>\n</section>\n<section id="about"', 1)
+              else:
+                  marker2 = '</div></section>\n<section id="about"'
+                  if marker2 in s:
+                      s = s.replace(marker2, f'</div>\n{cta}</div></section>\n<section id="about"', 1)
+
+          # Fix the visual overlap caused by overly broad transitions/layout rules.
+          style_patch = '''\n/* Layout repair */\n.web-services { position: relative; clear: both; }\n.web-services-box { position: relative; display: block; overflow: hidden; }\n.web-services-head, .service-grid, .main-web-details-cta { position: relative; z-index: 1; }\n.service-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; margin-top: 48px; }\n.service-card { position: relative; min-width: 0; }\n.main-web-details-cta { margin: 32px 0 0; display: flex; justify-content: center; }\n.main-web-details-cta a { display: inline-flex; align-items: center; gap: 14px; border: 1px solid #fff; background: transparent; color: #fff; padding: 14px 20px; border-radius: 999px; font-size: 11px; font-weight: 800; letter-spacing: .8px; transition: .25s; }\n.main-web-details-cta a:hover { background: #fff; color: #111; transform: translateY(-2px); }\n.service-link { display: none !important; }\n@media (max-width: 850px) { .service-grid { grid-template-columns: 1fr; } .main-web-details-cta { margin-top: 28px; } }\n'''
+          if '/* Layout repair */' not in s:
+              s = s.replace('</style>', style_patch + '</style>', 1)
+
+          # Keep the product name consistent across the page.
+          s = s.replace('MOVA', 'Nerio').replace('Mova', 'Nerio')
+          s = re.sub(r'(?<![A-Za-z])mova(?![A-Za-z])', 'nerio', s, flags=re.I)
+
+          if s != original:
+              p.write_text(s, encoding='utf-8')
+          else:
+              print('No textual changes required; layout patch may already be present.')
+
+      - name: Verify
+        shell: bash
+        run: |
+          set -e
+          test -f index.html
+          count=$(grep -oi 'class="main-web-details-cta"' index.html | wc -l)
+          echo "Single CTA count: $count"
+          test "$count" -eq 1
+          if grep -qi 'class="service-link"' index.html; then
+            echo 'Per-card service links still exist.'
+            exit 1
+          fi
+
+      - name: Commit and push
+        shell: bash
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add index.html
+          if git diff --cached --quiet; then
+            echo 'Nothing to commit.'
+            exit 0
+          fi
+          git commit -m 'Repair web services layout and single CTA'
+          git push
