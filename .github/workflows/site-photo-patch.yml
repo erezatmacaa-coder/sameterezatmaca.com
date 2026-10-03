@@ -1,8 +1,6 @@
 name: Apply Site Photo Patch
 
 on:
-  push:
-    branches: [main]
   workflow_dispatch:
 
 permissions:
