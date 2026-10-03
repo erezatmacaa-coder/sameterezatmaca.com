@@ -1,1 +1,8 @@
-window.SEA_ADMIN_CONFIG={enabled:true,provider:'external-backend',note:'GitHub Pages is static. Use a serverless/backend provider for real authentication and persistent shared content.'};
+window.SEA_ADMIN_CONFIG = Object.freeze({
+  githubOAuthClientId: '',
+  allowedGitHubLogin: 'erezatmacaa-coder',
+  owner: 'erezatmacaa-coder',
+  repo: 'sameterezatmaca.com',
+  branch: 'main',
+  scope: 'public_repo'
+});
