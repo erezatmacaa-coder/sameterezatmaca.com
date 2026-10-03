@@ -1,8 +1,6 @@
 name: Simplify web services CTA
 
 on:
-  push:
-    branches: [main]
   workflow_dispatch:
 
 permissions:
