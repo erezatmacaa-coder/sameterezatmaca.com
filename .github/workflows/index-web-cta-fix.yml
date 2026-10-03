@@ -1,8 +1,6 @@
 name: AI agent — fix main site web details CTA
 
 on:
-  push:
-    branches: [main]
   workflow_dispatch:
 
 permissions:
