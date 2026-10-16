@@ -2,10 +2,6 @@ name: Rename Mova to Nerio
 
 on:
   workflow_dispatch:
-  push:
-    branches: [main]
-    paths-ignore:
-      - '.github/workflows/rename-mova-to-nerio.yml'
 
 permissions:
   contents: write
