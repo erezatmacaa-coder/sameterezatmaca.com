@@ -1,3 +1,4 @@
+/* AUTOMATION-PROBE: muhtemel otomatik dagitim kapatildi mi kontrolu */
 /*
  * "Yeniden inşa" giriş sahnesi — sameterezatmaca.com
  * Sayfa bir kez yüklenirken tam ekran bir blueprint katmanı açılır: sayfa yukarıdan
