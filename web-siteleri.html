@@ -4,123 +4,97 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'self'; object-src 'none'; form-action 'self'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self'; upgrade-insecure-requests;">
-<title>Web siteleri — Tasarım ve geliştirme | Samet Erez Atmaca</title>
-<meta name="description" content="Kurumsal, kişisel, landing page ve özel web projeleri: tasarım, geliştirme ve yayına hazırlık.">
-<meta name="theme-color" content="#eef2f5">
-<meta property="og:title" content="Web siteleri — Tasarım ve geliştirme | Samet Erez Atmaca">
-<meta property="og:description" content="Kurumsal, kişisel, landing page ve özel web projeleri: tasarım, geliştirme ve yayına hazırlık.">
+<title>Web siteleri — Markayı dijitalde büyütmek | Samet Erez Atmaca</title>
+<meta name="description" content="Kurumsal, kişisel ve özel web siteleri; landing sayfaları ve özel web projeleri. Tasarım, geliştirme ve yayın tek elden.">
+<meta name="theme-color" content="#050505">
+<meta property="og:title" content="Web siteleri — Markayı dijitalde büyütmek">
+<meta property="og:description" content="Kurumsal, kişisel ve özel web siteleri; hazır şablon yerine markaya göre tasarım.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://sameterezatmaca.com/web-siteleri.html">
 <link rel="canonical" href="https://sameterezatmaca.com/web-siteleri.html">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 32'%3E%3Cpath d='M0 12a12 12 0 0 1 24 0v20H0z' fill='%2313203a'/%3E%3C/svg%3E">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Crect width='24' height='24' fill='%23ef4444'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wdth,wght@12..96,75..100,300..800&amp;display=swap">
-<link rel="stylesheet" href="site.css?v=20261107">
-<script src="site-ui.js?v=20261107"></script>
-<script src="aurora.js?v=20261107" defer></script>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bebas+Neue&amp;family=Caveat:wght@600&amp;family=JetBrains+Mono:wght@400;500;700&amp;family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap">
+<link rel="stylesheet" href="site.css?v=20261107b">
+<script src="site-ui.js?v=20261107b"></script>
+<script src="aurora.js?v=20261107b" defer></script>
 </head>
 <body>
 <a class="skip" href="#icerik">İçeriğe geç</a>
+<div class="bg-grid" aria-hidden="true"></div>
 <header class="site-header">
-  <div class="wrap header-inner">
-    <a class="brand" href="index.html"><span class="brand-mark" aria-hidden="true"></span>Samet Erez Atmaca</a>
-    <nav class="site-nav" id="site-nav" aria-label="Ana menü"><ul><li><a href="index.html#projeler">Projeler</a></li><li><a href="dilekco.html">Dilekco</a></li><li><a href="nerio.html">Nerio</a></li><li><a href="web-siteleri.html" aria-current="page">Web siteleri</a></li><li><a href="index.html#hakkimda">Hakkımda</a></li><li><a href="index.html#iletisim">İletişim</a></li></ul></nav>
-    <button class="icon-btn theme-toggle" type="button" aria-label="Temayı değiştir"><svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="10" cy="10" r="7.25" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M10 2.75a7.25 7.25 0 0 1 0 14.5z" fill="currentColor"/></svg></button>
-    <button class="icon-btn nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav" aria-label="Menüyü aç"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M3 6h14M3 10h14M3 14h14" stroke="currentColor" stroke-width="1.6" fill="none"/></svg></button>
+  <div class="nav-shell">
+    <a class="brand" href="index.html" aria-label="Samet Erez Atmaca — ana sayfa"><span class="brand-sq">SEA</span><span class="brand-name">samet.</span></a>
+    <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav" aria-label="Menüyü aç"><svg viewBox="0 0 20 20" width="18" height="18" aria-hidden="true"><path d="M3 6h14M3 10h14M3 14h14" stroke="currentColor" stroke-width="1.6"/></svg></button>
+    <nav class="nav-links" id="site-nav" aria-label="Ana menü">
+      <a href="index.html#projeler">Projeler</a>
+      <a href="dilekco.html">Dilekco</a>
+      <a href="nerio.html">Nerio</a>
+      <a href="web-siteleri.html" aria-current="page">Web siteleri</a>
+      <a href="index.html#hakkimda">Hakkımda</a>
+      <a href="index.html#iletisim">İletişim</a>
+    </nav>
+    <div class="nav-status"><span class="live-dot" aria-hidden="true"></span><span class="status-text">HİZMET</span><a class="nav-cta" href="mailto:info@sameterezatmaca.com">TEKLİF AL →</a></div>
   </div>
 </header>
 <main id="icerik">
 
-<section class="wrap page-hero plain" aria-labelledby="baslik">
-  <a class="crumb" href="index.html#projeler">Projeler</a>
-  <h1 class="display" id="baslik">Markaları dijitalde büyütüyorum</h1>
-  <p class="lede" style="margin-top:28px">Web sitesi benim için yalnızca bir sayfa tasarlamak değil. Markanın güvenini, karakterini ve sunduğu değeri ziyaretçiye birkaç saniye içinde anlatabilen bir dijital deneyim kurmak. Bu nedenle tasarım, içerik, performans ve geliştirme sürecini birlikte ele alıyorum.</p>
-  <div class="actions"><a class="btn" href="#iletisim">Proje başlat</a><a class="btn ghost" href="#hizmetler">Hizmetler</a></div>
-</section>
-
-<section class="wrap section" id="hizmetler" aria-labelledby="hizmet-baslik" style="padding-top:0">
-  <div class="section-head">
-    <h2 id="hizmet-baslik">İhtiyaca göre web çözümleri</h2>
-    <p>Hazır şablonun sınırlarına göre hareket etmek yerine projenin amacı, hedef kitlesi ve marka dili üzerinden bir yapı kuruyorum. Küçük bir kişisel portföyden kapsamlı bir kurumsal siteye kadar aynı yaklaşım geçerli.</p>
-  </div>
-  <div class="services tulip-rule">
-    <div class="service"><h3>Kurumsal web sitesi</h3><p>Şirketin güvenilirliğini ve profesyonel kimliğini yansıtan, hizmetleri anlaşılır anlatan ve ziyaretçiyi doğru aksiyona götüren kurumsal web siteleri.</p><dl><dt>Odak</dt><dd>Marka güveni, hizmet anlatımı, iletişim ve dönüşüm.</dd><dt>Çıktı</dt><dd>Responsive tasarım, geliştirme, temel SEO ve yayına hazırlık.</dd></dl></div>
-    <div class="service"><h3>Kişisel web sitesi</h3><p>Portföy, CV ve kişisel markayı tek yerde toplayan; kişinin yaptığı işi anlatmakla kalmayıp karakterini de yansıtan özel siteler.</p><dl><dt>Odak</dt><dd>Kişisel marka, projeler, deneyim ve iletişim.</dd><dt>Çıktı</dt><dd>Özel görsel dil, proje sunumu, mobil uyum ve hızlı yapı.</dd></dl></div>
-    <div class="service"><h3>Landing page</h3><p>Tek bir ürün, hizmet veya kampanyaya odaklanan; kısa sürede mesajı anlatan ve kullanıcıyı aksiyona yönlendiren sayfalar.</p><dl><dt>Odak</dt><dd>Tek mesaj, güçlü ilk izlenim ve net çağrı.</dd><dt>Çıktı</dt><dd>Hızlı, responsive ve kampanya odaklı sayfa.</dd></dl></div>
-    <div class="service"><h3>Özel web projeleri</h3><p>Standart web sitesinin ötesine geçen özel akışlar, hesaplar, paneller, formlar ve ihtiyaç bazlı web deneyimleri.</p><dl><dt>Odak</dt><dd>Özel fonksiyonlar ve iş akışları.</dd><dt>Çıktı</dt><dd>İhtiyaca göre tasarım, frontend ve sistem entegrasyonu.</dd></dl></div>
-  </div>
-</section>
-
-<section class="band" aria-labelledby="surec-baslik">
-  <div class="wrap section">
-    <div class="section-head"><h2 id="surec-baslik">Fikirden yayına</h2><p>Her proje aynı dört adımdan geçer.</p></div>
-    <ol class="steps" style="--c:var(--tulip)">
-      <li><h3>Keşif</h3><p>Markayı, hedefi, kullanıcıyı ve mevcut ihtiyaçları anlamak için önce doğru soruları soruyorum.</p></li>
-      <li><h3>Tasarım</h3><p>Bilgi mimarisi, içerik hiyerarşisi ve görsel sistem üzerinden sayfaların yapısını kuruyorum.</p></li>
-      <li><h3>Geliştirme</h3><p>Tasarımı hızlı, responsive ve sürdürülebilir bir frontend yapısına dönüştürüyorum.</p></li>
-      <li><h3>Yayın</h3><p>Domain, hosting, mobil kontroller, temel SEO ve son testlerle projeyi yayına hazırlıyorum.</p></li>
-    </ol>
-  </div>
-</section>
-
-<section class="wrap section" aria-labelledby="yaklasim-baslik">
-  <div class="section-head"><h2 id="yaklasim-baslik">Güzel görünmek tek başına yetmez</h2></div>
-  <div class="features">
-    <div class="feature"><h3>Mesaj ilk bakışta anlaşılmalı</h3><p>Ziyaretçi birkaç saniyede ne yaptığını, kime hizmet verdiğini ve neden seni tercih etmesi gerektiğini anlayabilmeli.</p></div>
-    <div class="feature"><h3>Güven tasarımın parçasıdır</h3><p>Tipografi, boşluk kullanımı, içerik düzeni ve tutarlı görsel dil markanın algısını doğrudan etkiler.</p></div>
-    <div class="feature"><h3>Hız deneyimin bir parçasıdır</h3><p>Gereksiz efektler yerine performansı koruyan, mobilde de hızlı açılan bir yapı tercih ediyorum.</p></div>
-    <div class="feature"><h3>Her bölümün bir amacı olmalı</h3><p>Sayfadaki her alan ya bilgi vermeli, ya güven oluşturmalı ya da kullanıcıyı doğru sonraki adıma taşımalı.</p></div>
-  </div>
-</section>
-
-<section class="band" aria-labelledby="teslim-baslik">
-  <div class="wrap section about">
-    <div><h2 id="teslim-baslik">Proje sonunda ne alıyorsun?</h2></div>
-    <ul class="tools">
-      <li><b>Özel tasarım</b><span>Markaya göre oluşturulmuş görsel sistem</span></li>
-      <li><b>Responsive yapı</b><span>Masaüstü, tablet ve mobil uyum</span></li>
-      <li><b>Geliştirme</b><span>Temiz frontend ve özel fonksiyonlar</span></li>
-      <li><b>SEO temeli</b><span>Başlıklar, açıklamalar, teknik yapı</span></li>
-      <li><b>Yayın</b><span>Domain ve hosting kurulumu</span></li>
-      <li><b>Son kontroller</b><span>Mobil görünüm, bağlantılar, formlar, performans</span></li>
-    </ul>
-  </div>
-</section>
-
-<section class="wrap section" aria-labelledby="calisma-baslik">
-  <div class="section-head"><h2 id="calisma-baslik">Çalışmalar</h2><p>Her projeyi yalnızca ekran görüntüsü olarak değil, neyi çözmeye çalıştığını anlatan bir çalışma olarak sunuyorum.</p></div>
-  <div class="works">
-    <a class="work" href="dilekco.html" style="--c:var(--cobalt)"><span class="kind">Web uygulaması</span><h3>Dilekco</h3><p>Avukatlar ve hukuk büroları için resmî mevzuata dayanan hukuk çalışma alanı.</p><span class="go">Projeyi incele</span></a>
-    <a class="work" href="nerio.html" style="--c:var(--teal)"><span class="kind">Ürün, sosyal</span><h3>Nerio</h3><p>Etkinlikler, hikâyeler, anılar ve şehir rotalarını bir araya getiren sosyal deneyim.</p><span class="go">Projeyi incele</span></a>
-    <a class="work" href="index.html" style="--c:var(--tulip)"><span class="kind">Kişisel marka</span><h3>Samet Erez Atmaca</h3><p>Kişisel marka, projeler ve geliştirme yaklaşımını bir araya getiren portföy sitesi.</p><span class="go">Siteye git</span></a>
-    <a class="work" href="#iletisim"><span class="kind">Kurumsal ve kişisel</span><h3>Senin siten</h3><p>Markanın hizmetlerini ya da kişisel çalışmalarını anlatan özel web sitesi.</p><span class="go">Proje başlat</span></a>
-  </div>
-</section>
-
-<section class="wrap section contact" id="iletisim" aria-labelledby="iletisim-baslik">
-  <div class="contact-grid">
-    <div>
-      <h2 id="iletisim-baslik">Bir fikrin varsa konuşalım</h2>
-      <p class="lede" style="margin-top:20px">Projenin ne olduğunu, nasıl bir site düşündüğünü ve varsa referanslarını anlat. İhtiyaca göre kapsamı birlikte netleştirelim.</p>
-      <a class="mail" href="mailto:info@sameterezatmaca.com?subject=Web%20sitesi%20projesi">info@sameterezatmaca.com</a>
+<section class="page-hero" id="hero">
+  <div class="wrap">
+    <a class="crumb" href="index.html#projeler">← Projeler</a>
+    <p class="field-tag">WEB TASARIM &amp; GELİŞTİRME</p>
+    <h1>Markaları<br>dijitalde <span class="accent">büyütüyorum.</span></h1>
+    <p class="lede">Web sitesi benim için yalnızca bir sayfa tasarlamak değil. Markanın güvenini, karakterini ve sunduğu değeri ziyaretçiye birkaç saniye içinde anlatabilen bir dijital deneyim kurmak. Bu nedenle tasarım, içerik, performans ve geliştirme sürecini birlikte ele alıyorum.</p>
+    <div class="actions">
+      <a class="btn btn-red" href="mailto:info@sameterezatmaca.com?subject=Web%20projesi">Proje başlat →</a>
+      <a class="btn" href="#hizmetler">Hizmetler</a>
     </div>
-    <ul class="contact-list">
-      <li><a href="mailto:erez.atmaca@hotmail.com">erez.atmaca@hotmail.com</a></li>
-    </ul>
   </div>
 </section>
+
+<section class="section" id="hizmetler" aria-labelledby="hizmet-baslik">
+  <div class="wrap">
+    <div class="section-head"><div><p class="eyebrow">01. HİZMETLER</p><h2 id="hizmet-baslik">İhtiyaca göre<br>web çözümleri.</h2></div><p class="section-lead">Hazır şablonun sınırlarına göre hareket etmek yerine projenin amacı, hedef kitlesi ve marka dili üzerinden bir yapı kuruyorum. Küçük bir kişisel portföyden kapsamlı bir kurumsal siteye kadar aynı yaklaşım geçerli.</p></div>
+    <div class="page-grid">
+      <div class="panel"><h2>Kurumsal web sitesi</h2><ul><li>Şirketin güvenilirliğini ve profesyonel kimliğini yansıtan, hizmetleri anlaşılır anlatan ve ziyaretçiyi doğru aksiyona götüren siteler</li><li>Odak: marka güveni, hizmet anlatımı, iletişim ve dönüşüm</li><li>Çıktı: responsive tasarım, geliştirme, temel SEO ve yayına hazırlık</li></ul></div>
+      <div class="panel"><h2>Kişisel web sitesi</h2><ul><li>Portföy, CV ve kişisel markayı tek yerde toplayan; kişinin yaptığı işi anlatmakla kalmayıp karakterini de yansıtan özel siteler</li><li>Odak: kişisel marka, projeler, deneyim ve iletişim</li><li>Çıktı: özel görsel dil, proje sunumu, mobil uyum ve hızlı yapı</li></ul></div>
+      <div class="panel"><h2>Landing page</h2><ul><li>Tek bir ürün, hizmet veya kampanyaya odaklanan; kısa sürede mesajı anlatan ve kullanıcıyı aksiyona yönlendiren sayfalar</li><li>Odak: tek mesaj, güçlü ilk izlenim ve net çağrı</li><li>Çıktı: hızlı, responsive ve kampanya odaklı sayfa</li></ul></div>
+      <div class="panel"><h2>Özel web projeleri</h2><ul><li>Standart web sitesinin ötesine geçen özel akışlar, hesaplar, paneller, formlar ve ihtiyaç bazlı web deneyimleri</li><li>Odak: özel fonksiyonlar ve iş akışları</li><li>Çıktı: ihtiyaca göre tasarım, frontend ve sistem entegrasyonu</li></ul></div>
+    </div>
+  </div>
+</section>
+
+<section class="section" aria-labelledby="surec">
+  <div class="wrap split">
+    <div><p class="eyebrow">02. SÜREÇ</p><h2 id="surec">Fikirden yayına<br>dört adım.</h2></div>
+    <div class="principles" style="border-top:1px solid var(--line)">
+      <div class="principle"><span class="num">01</span><div><h3>Keşif</h3><p>Markayı, hedefi, kullanıcıyı ve mevcut ihtiyaçları anlamak için önce doğru soruları soruyorum.</p></div></div>
+      <div class="principle"><span class="num">02</span><div><h3>Tasarım</h3><p>Bilgi mimarisi, içerik hiyerarşisi ve görsel sistem üzerinden sayfaların yapısını kuruyorum.</p></div></div>
+      <div class="principle"><span class="num">03</span><div><h3>Geliştirme</h3><p>Tasarımı hızlı, responsive ve sürdürülebilir bir frontend yapısına dönüştürüyorum.</p></div></div>
+      <div class="principle"><span class="num">04</span><div><h3>Yayın</h3><p>Domain, hosting, mobil kontroller, temel SEO ve son testlerle projeyi yayına hazırlıyorum.</p></div></div>
+    </div>
+  </div>
+</section>
+
+<section class="section" aria-labelledby="ilkeler">
+  <div class="wrap">
+    <div class="section-head"><div><p class="eyebrow">03. İLKELER</p><h2 id="ilkeler">Güzel görünmek<br>tek başına yetmez.</h2></div></div>
+    <div class="page-grid">
+      <div class="panel"><h2>Mesaj ilk bakışta anlaşılmalı</h2><p style="color:var(--muted);font-size:14.5px">Ziyaretçi birkaç saniyede ne yaptığını, kime hizmet verdiğini ve neden seni tercih etmesi gerektiğini anlayabilmeli.</p></div>
+      <div class="panel"><h2>Güven tasarımın parçasıdır</h2><p style="color:var(--muted);font-size:14.5px">Tipografi, boşluk kullanımı, içerik düzeni ve tutarlı görsel dil markanın algısını doğrudan etkiler.</p></div>
+      <div class="panel"><h2>Hız deneyimin bir parçasıdır</h2><p style="color:var(--muted);font-size:14.5px">Gereksiz ağırlık yerine doğru çözüm: hızlı yüklenen, mobilde rahat ve sürdürülebilir bir yapı.</p></div>
+      <div class="panel"><h2>Tek elden süreç</h2><p style="color:var(--muted);font-size:14.5px">Tasarım, içerik, geliştirme ve yayın aynı kişide; iletişim kısa, kararlar hızlı.</p></div>
+    </div>
+    <div class="actions" style="display:flex;gap:12px;margin-top:28px"><a class="btn btn-red" href="mailto:info@sameterezatmaca.com?subject=Web%20projesi">Proje başlat →</a><a class="btn" href="index.html#iletisim">Soru sor</a></div>
+  </div>
+</section>
+
 </main>
-<footer class="site-footer">
+<footer class="footer">
   <div class="wrap footer-inner">
-    <p>© 2026 Samet Erez Atmaca</p>
-    <ul>
-      <li><a href="dilekco.html">Dilekco</a></li>
-      <li><a href="nerio.html">Nerio</a></li>
-      <li><a href="web-siteleri.html">Web siteleri</a></li>
-      <li><a href="https://github.com/erezatmacaa-coder" rel="noopener" target="_blank">GitHub</a></li>
-      <li><a href="mailto:info@sameterezatmaca.com">info@sameterezatmaca.com</a></li>
-    </ul>
+    <span>© 2026 Samet Erez Atmaca</span>
+    <div class="footer-links"><a href="index.html">Ana sayfa</a><a href="dilekco.html">Dilekco</a><a href="nerio.html">Nerio</a><a href="mailto:info@sameterezatmaca.com">E-posta</a></div>
   </div>
 </footer>
 </body>
