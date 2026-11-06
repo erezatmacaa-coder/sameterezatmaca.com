@@ -38,11 +38,31 @@
     var c = rgb(hex);
     return c ? 'rgba(' + c[0] + ',' + c[1] + ',' + c[2] + ',' + a + ')' : 'rgba(120,140,180,' + a + ')';
   }
-  function isDark() {
+  function temaKoyu() {
     var t = document.documentElement.getAttribute('data-theme');
     if (t === 'dark') return true;
     if (t === 'light') return false;
     return !!(window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches);
+  }
+  // Koyu zeminli bölümlerde (ör. proje sayfalarındaki renkli "field" alanları) tema açık
+  // olsa bile açık tonlar kullanılır; aksi hâlde animasyon zeminde kaybolur.
+  function zeminKoyu(el) {
+    try {
+      if (el && el.classList && (el.classList.contains('field') || el.classList.contains('nerio'))) return true;
+      var bg = el ? (getComputedStyle(el).backgroundColor || '') : '';
+      var m = bg.match(/rgba?\(\s*(\d+)[,\s]+(\d+)[,\s]+(\d+)/);
+      if (!m) return temaKoyu();
+      var l = (0.2126 * +m[1] + 0.7152 * +m[2] + 0.0722 * +m[3]) / 255;
+      return l < 0.45;
+    } catch (e) { return temaKoyu(); }
+  }
+  // Animasyon alanı: site genelinde hero varsa hero, yoksa sayfa başlığı bandı.
+  function hedefSec() {
+    return document.querySelector('[data-aurora]') ||
+      document.querySelector('.hero') ||
+      document.querySelector('.page-hero') ||
+      document.querySelector('main > section:first-of-type') ||
+      document.querySelector('main');
   }
   function isMobile() {
     return (window.matchMedia && window.matchMedia('(pointer: coarse)').matches) || window.innerWidth < 760;
@@ -56,7 +76,7 @@
   }
 
   function paletteRefresh() {
-    var dark = isDark();
+    var dark = zeminKoyu(hero) || temaKoyu();
     var cobalt = css('--cobalt', dark ? '#93a9ff' : '#2448c9');
     var teal = css('--teal', dark ? '#5ad3c2' : '#0a7468');
     var tulip = css('--tulip', dark ? '#ff8f8a' : '#b3303a');
@@ -231,7 +251,7 @@
   }
 
   function init() {
-    hero = document.querySelector('.hero');
+    hero = hedefSec();
     if (!hero) return;
     reduce = !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
     profile();
