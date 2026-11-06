@@ -201,3 +201,61 @@ body>header,body>main,body>footer{position:relative;z-index:2}
   mask-image:linear-gradient(to right,transparent 0,#000 8%,#000 92%,transparent 100%),linear-gradient(to bottom,transparent 0,#000 6%,#000 94%,transparent 100%);
   mask-composite:intersect}
 @media(max-width:760px){.price-grid .price{grid-column:auto!important}}
+/* Giriş animasyonu ve sahne hareketleri (intro.js ile) */
+.hero .script{opacity:0}
+.hero .hero-name{opacity:0;transform:translateY(18px)}
+.hero .hero-role,.hero .hero-lead,.hero .hero-actions{opacity:0;transform:translateY(16px)}
+.hero .hero-photo{opacity:0;transform:translateY(24px) scale(.98)}
+.hero .hero-stats .stat{opacity:0;transform:translateY(14px)}
+.hero .hero-word{clip-path:inset(0 50% 0 50%)}
+
+body.anim .hero .hero-word{animation:wordOpen 1.15s var(--ease) both .1s}
+body.anim .hero .script{animation:fadeUp .7s var(--ease) both .75s}
+body.anim .hero .hero-name{animation:popIn .85s cubic-bezier(.22,1.3,.36,1) both .9s}
+body.anim .hero .hero-role{animation:fadeUp .6s var(--ease) both 1.15s}
+body.anim .hero .hero-lead{animation:fadeUp .75s var(--ease) both 1.3s}
+body.anim .hero .hero-actions{animation:fadeUp .7s var(--ease) both 1.5s}
+body.anim .hero .hero-photo{animation:photoIn 1s var(--ease) both 1.1s}
+body.anim .hero .hero-stats .stat{animation:fadeUp .6s var(--ease) both}
+body.anim .hero .hero-stats .stat:nth-child(1){animation-delay:1.7s}
+body.anim .hero .hero-stats .stat:nth-child(2){animation-delay:1.8s}
+body.anim .hero .hero-stats .stat:nth-child(3){animation-delay:1.9s}
+body.anim .hero .hero-stats .stat:nth-child(4){animation-delay:2s}
+
+@keyframes wordOpen{from{clip-path:inset(0 50% 0 50%);opacity:0}to{clip-path:inset(0 0 0 0);opacity:1}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+@keyframes popIn{0%{opacity:0;transform:scale(.82)}60%{opacity:1;transform:scale(1.03)}100%{opacity:1;transform:scale(1)}}
+@keyframes photoIn{from{opacity:0;transform:translateY(24px) scale(.98)}to{opacity:1;transform:none}}
+
+/* Tarayıcı ajanları: saai'deki "sayfa inşa ediliyor" hissine selam */
+.agents{position:absolute;inset:0;z-index:3;pointer-events:none;overflow:hidden}
+.agent{position:absolute;display:flex;align-items:center;gap:6px;font-family:var(--mono);font-size:9.5px;letter-spacing:.12em;color:#0a0505;opacity:0}
+.agent svg{width:14px;height:14px;filter:drop-shadow(0 2px 6px rgba(0,0,0,.5))}
+.agent span{background:currentColor;color:inherit;padding:2px 5px;border-radius:2px;font-weight:700;color:#0a0505}
+.agent b{color:#0a0505;font-weight:700}
+.agent.red{color:#ef4444}.agent.teal{color:#5ad3c2}.agent.violet{color:#a78bfa}.agent.white{color:#f5f5f5}
+body.anim .agent{animation:agentFade .5s ease both,agentPath 16s ease-in-out infinite}
+body.anim .agent.a1{left:18%;top:38%;animation-delay:1.2s,1.2s}
+body.anim .agent.a2{left:72%;top:26%;animation-delay:1.5s,1.5s}
+body.anim .agent.a3{left:44%;top:64%;animation-delay:1.8s,1.8s}
+body.anim .agent.a4{left:84%;top:56%;animation-delay:2.1s,2.1s}
+@keyframes agentFade{from{opacity:0}to{opacity:.95}}
+@keyframes agentPath{0%{transform:translate(0,0)}25%{transform:translate(34px,-22px)}50%{transform:translate(-18px,26px)}75%{transform:translate(22px,14px)}100%{transform:translate(0,0)}}
+
+/* Tarama çizgisi */
+.scanline{position:absolute;left:0;right:0;top:0;height:1px;background:linear-gradient(90deg,transparent,rgba(239,68,68,.9),transparent);z-index:4;pointer-events:none;opacity:0}
+body.anim .scanline{animation:scan 2.2s cubic-bezier(.4,0,.2,1) .2s 1 both}
+@keyframes scan{0%{opacity:0;transform:translateY(0)}8%{opacity:1}92%{opacity:1}100%{opacity:0;transform:translateY(760px)}}
+
+/* Bölümler kaydırınca açılır */
+.reveal{opacity:0;transform:translateY(26px);transition:opacity .7s var(--ease),transform .7s var(--ease)}
+.reveal.in{opacity:1;transform:none}
+.reveal.d1{transition-delay:.08s}.reveal.d2{transition-delay:.16s}.reveal.d3{transition-delay:.24s}
+
+@media(max-width:760px){.agents{display:none}body.anim .scanline{display:none}}
+@media(prefers-reduced-motion:reduce){
+  .hero .script,.hero .hero-name,.hero .hero-role,.hero .hero-lead,.hero .hero-actions,.hero .hero-photo,.hero .hero-stats .stat{opacity:1;transform:none}
+  .hero .hero-word{clip-path:none}
+  .agents,.scanline{display:none}
+  .reveal{opacity:1;transform:none}
+}
